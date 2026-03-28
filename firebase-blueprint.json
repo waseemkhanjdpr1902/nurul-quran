@@ -1,0 +1,173 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and progress data",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string", "format": "uri" },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "tasbeehCount": { "type": "integer" },
+            "prayersCompleted": { "type": "integer" },
+            "versesRead": { "type": "integer" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastActive": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "UserProgress": {
+      "title": "UserProgress",
+      "description": "Granular progress tracking for Quran and Azkar",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string" },
+        "type": { "type": "string", "enum": ["quran", "azkar"] },
+        "content_id": { "type": "string" },
+        "count": { "type": "integer" },
+        "last_activity": { "type": "string", "format": "date-time" }
+      },
+      "required": ["user_id", "type", "content_id", "count"]
+    },
+    "ChatHistory": {
+      "title": "ChatHistory",
+      "description": "AI Chat History",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string" },
+        "messages": { "type": "array", "items": { "type": "object" } },
+        "title": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["user_id", "messages"]
+    },
+    "Bookmark": {
+      "title": "Bookmark",
+      "description": "User bookmarks for Quran and Hadith",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string" },
+        "type": { "type": "string", "enum": ["quran", "hadith"] },
+        "content_id": { "type": "string" },
+        "metadata": { "type": "object" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["user_id", "type", "content_id"]
+    },
+    "Question": {
+      "title": "Question",
+      "description": "Public Islamic Q&A question",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "category": { "type": "string", "enum": ["Quran", "Hadith", "Fiqh", "Daily Life", "Finance"] },
+        "author": { "type": "string" },
+        "author_name": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "upvotes": { "type": "integer" },
+        "answer_count": { "type": "integer" },
+        "reports": { "type": "integer" }
+      },
+      "required": ["title", "body", "category", "author"]
+    },
+    "Answer": {
+      "title": "Answer",
+      "description": "Answer to a public question",
+      "type": "object",
+      "properties": {
+        "body": { "type": "string" },
+        "author": { "type": "string" },
+        "author_name": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "upvotes": { "type": "integer" },
+        "reports": { "type": "integer" }
+      },
+      "required": ["body", "author"]
+    },
+    "AnonymousQuestion": {
+      "title": "AnonymousQuestion",
+      "description": "Sensitive anonymous question",
+      "type": "object",
+      "properties": {
+        "body": { "type": "string" },
+        "category": { "type": "string", "enum": ["Quran", "Hadith", "Fiqh", "Marriage & Family", "Finance", "Other"] },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["pending", "answered"] },
+        "answer": { "type": "string" },
+        "answerTimestamp": { "type": "string", "format": "date-time" },
+        "upvotes": { "type": "integer" }
+      },
+      "required": ["body", "category", "status"]
+    },
+    "GroupPost": {
+      "title": "GroupPost",
+      "description": "Post in a discussion group",
+      "type": "object",
+      "properties": {
+        "body": { "type": "string" },
+        "author": { "type": "string" },
+        "author_name": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "replyCount": { "type": "integer" }
+      },
+      "required": ["body", "author"]
+    },
+    "GroupReply": {
+      "title": "GroupReply",
+      "description": "Reply to a group post",
+      "type": "object",
+      "properties": {
+        "body": { "type": "string" },
+        "author": { "type": "string" },
+        "author_name": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["body", "author"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents"
+    },
+    "/user_progress/{progressId}": {
+      "schema": "UserProgress",
+      "description": "Granular progress tracking documents"
+    },
+    "/chat_history/{chatId}": {
+      "schema": "ChatHistory",
+      "description": "User AI chat history"
+    },
+    "/bookmarks/{bookmarkId}": {
+      "schema": "Bookmark",
+      "description": "User bookmarks"
+    },
+    "/questions/{questionId}": {
+      "schema": "Question",
+      "description": "Public questions"
+    },
+    "/questions/{questionId}/answers/{answerId}": {
+      "schema": "Answer",
+      "description": "Answers to questions"
+    },
+    "/anonymous_questions/{aqId}": {
+      "schema": "AnonymousQuestion",
+      "description": "Anonymous questions"
+    },
+    "/groups/{groupId}/posts/{postId}": {
+      "schema": "GroupPost",
+      "description": "Group discussion posts"
+    },
+    "/groups/{groupId}/posts/{postId}/replies/{replyId}": {
+      "schema": "GroupReply",
+      "description": "Replies to group posts"
+    }
+  }
+}

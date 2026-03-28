@@ -1,0 +1,9 @@
+{
+  "name": "Nurul Quran: Islamic Spiritual Guidance",
+  "description": "A comprehensive platform for Quranic studies, Hadith, daily Azkar, and spiritual guidance (Tasawwuf) with AI-powered assistance.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
