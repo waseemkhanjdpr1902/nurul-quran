@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User, AlertCircle, Loader2, Chrome } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { auth, googleProvider, signInWithPopup } from '../lib/firebase';
+import { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from '../lib/firebase';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -36,9 +36,32 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     setError(null);
 
-    // Email/Password login is not yet implemented in this migration
-    setError("Email/Password login is currently disabled. Please use Google Sign-In.");
-    setLoading(false);
+    try {
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        if (fullName) {
+          await updateProfile(userCredential.user, { displayName: fullName });
+        }
+      }
+      onClose();
+    } catch (err: any) {
+      console.error('Auth error:', err);
+      let message = 'An error occurred during authentication';
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        message = 'Invalid email or password';
+      } else if (err.code === 'auth/email-already-in-use') {
+        message = 'Email already in use';
+      } else if (err.code === 'auth/weak-password') {
+        message = 'Password should be at least 6 characters';
+      } else if (err.code === 'auth/invalid-email') {
+        message = 'Invalid email address';
+      }
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;

@@ -147,6 +147,13 @@ const ProfilePage = () => {
         </div>
         <h1 id="profile-signin-title" className="text-3xl font-bold mb-4">Sign in to view your profile</h1>
         <p id="profile-signin-desc" className="text-zinc-500 mb-8">Track your spiritual progress and save your favorite content.</p>
+        <button
+          id="profile-signin-btn"
+          onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}
+          className="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20"
+        >
+          Sign In Now
+        </button>
       </div>
     );
   }
