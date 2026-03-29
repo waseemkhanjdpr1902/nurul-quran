@@ -29,36 +29,38 @@ import { BismillahHeader } from './components/BismillahHeader';
 import { HijriCalendar } from './components/HijriCalendar';
 import { SearchBar } from './components/SearchBar';
 import { TasbeehCounter } from './components/TasbeehCounter';
+import SplashPage from './components/SplashPage';
 
 const HomePage = () => {
   const navigate = useNavigate();
   return (
-    <div className="p-4 md:p-8 max-w-6xl mx-auto pb-32 md:pb-8 animate-fade-up">
+    <div id="home-page" className="p-4 md:p-8 max-w-6xl mx-auto pb-32 md:pb-8 animate-fade-up">
       <BismillahHeader />
       <HijriCalendar />
-      <div className="my-8">
+      <div id="home-search-container" className="my-8">
         <SearchBar />
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        <div className="lg:col-span-2">
+      <div id="home-dashboard-grid" className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div id="home-dashboard-main" className="lg:col-span-2">
           <SpiritualDashboard />
         </div>
-        <div className="space-y-8">
+        <div id="home-dashboard-sidebar" className="space-y-8">
           <TasbeehCounter />
         </div>
       </div>
 
       {/* Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+      <div id="home-features-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
         {[
-          { icon: BookOpen, title: 'Quranic Study', desc: 'Read and listen to the Holy Quran with translations.', color: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400', to: '/quran' },
-          { icon: Heart, title: 'Tasawwuf', desc: 'Explore the spiritual path and purification of the soul.', color: 'bg-rose-50 text-rose-600 dark:bg-rose-900/20 dark:text-rose-400', to: '/tasawwuf' },
-          { icon: Moon, title: 'Daily Azkar', desc: 'Keep your tongue moist with the remembrance of Allah.', color: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400', to: '/azkar' },
-          { icon: Shield, title: 'Hadith', desc: 'Authentic traditions and sayings of the Prophet (PBUH).', color: 'bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400', to: '/hadith' },
+          { id: 'quranic-study', icon: BookOpen, title: 'Quranic Study', desc: 'Read and listen to the Holy Quran with translations.', color: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400', to: '/quran' },
+          { id: 'tasawwuf', icon: Heart, title: 'Tasawwuf', desc: 'Explore the spiritual path and purification of the soul.', color: 'bg-rose-50 text-rose-600 dark:bg-rose-900/20 dark:text-rose-400', to: '/tasawwuf' },
+          { id: 'daily-azkar', icon: Moon, title: 'Daily Azkar', desc: 'Keep your tongue moist with the remembrance of Allah.', color: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400', to: '/azkar' },
+          { id: 'hadith', icon: Shield, title: 'Hadith', desc: 'Authentic traditions and sayings of the Prophet (PBUH).', color: 'bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400', to: '/hadith' },
         ].map((f, i) => (
           <motion.div 
             key={i}
+            id={`home-feature-${f.id}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
@@ -75,11 +77,11 @@ const HomePage = () => {
       </div>
 
       {/* Quote Section */}
-      <div className="text-center py-16 border-t border-zinc-100 dark:border-zinc-800">
-        <p className="text-3xl font-arabic text-emerald-700 dark:text-emerald-400 mb-6 leading-relaxed">
+      <div id="home-quote-section" className="text-center py-16 border-t border-zinc-100 dark:border-zinc-800">
+        <p id="home-quote-arabic" className="text-3xl font-arabic text-emerald-700 dark:text-emerald-400 mb-6 leading-relaxed">
           "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ"
         </p>
-        <p className="text-zinc-500 italic">"Verily, in the remembrance of Allah do hearts find rest." (Quran 13:28)</p>
+        <p id="home-quote-translation" className="text-zinc-500 italic">"Verily, in the remembrance of Allah do hearts find rest." (Quran 13:28)</p>
       </div>
     </div>
   );
@@ -138,21 +140,22 @@ const ProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="p-8 max-w-4xl mx-auto text-center py-24">
-        <div className="w-20 h-20 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6">
+      <div id="profile-signin-prompt" className="p-8 max-w-4xl mx-auto text-center py-24">
+        <div id="profile-signin-icon" className="w-20 h-20 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6">
           <UserIcon className="text-zinc-400" size={32} />
         </div>
-        <h1 className="text-3xl font-bold mb-4">Sign in to view your profile</h1>
-        <p className="text-zinc-500 mb-8">Track your spiritual progress and save your favorite content.</p>
+        <h1 id="profile-signin-title" className="text-3xl font-bold mb-4">Sign in to view your profile</h1>
+        <p id="profile-signin-desc" className="text-zinc-500 mb-8">Track your spiritual progress and save your favorite content.</p>
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">Your Spiritual Profile</h1>
+    <div id="profile-page" className="p-8 max-w-4xl mx-auto">
+      <div id="profile-header" className="flex items-center justify-between mb-8">
+        <h1 id="profile-title" className="text-3xl font-bold">Your Spiritual Profile</h1>
         <button
+          id="profile-sign-out"
           onClick={handleSignOut}
           className="flex items-center gap-2 px-4 py-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-all font-medium"
         >
@@ -162,18 +165,18 @@ const ProfilePage = () => {
       </div>
 
       <div className="grid gap-6">
-        <div className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
+        <div id="profile-main-card" className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
           <div className="flex items-center gap-6 mb-8">
-            <div className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 text-4xl font-bold border-4 border-white dark:border-zinc-800 shadow-lg">
+            <div id="profile-avatar" className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 text-4xl font-bold border-4 border-white dark:border-zinc-800 shadow-lg">
               {user.email?.[0].toUpperCase()}
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">
+              <h2 id="profile-display-name" className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">
                 {profile?.full_name || user.displayName || 'Spiritual Seeker'}
               </h2>
-              <p className="text-zinc-500">{user.email}</p>
+              <p id="profile-email-display" className="text-zinc-500">{user.email}</p>
               <div className="flex items-center gap-2 mt-2">
-                <span className="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded-full uppercase tracking-wider">
+                <span id="profile-badge-active" className="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded-full uppercase tracking-wider">
                   Active Seeker
                 </span>
               </div>
@@ -181,59 +184,59 @@ const ProfilePage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl text-center border border-zinc-100 dark:border-zinc-800">
-              <p className="text-3xl font-bold text-emerald-600 mb-1">{stats.azkar}</p>
-              <p className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Azkar Done</p>
+            <div id="profile-stats-azkar" className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl text-center border border-zinc-100 dark:border-zinc-800">
+              <p id="profile-stats-azkar-value" className="text-3xl font-bold text-emerald-600 mb-1">{stats.azkar}</p>
+              <p id="profile-stats-azkar-label" className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Azkar Done</p>
             </div>
-            <div className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl text-center border border-zinc-100 dark:border-zinc-800">
-              <p className="text-3xl font-bold text-emerald-600 mb-1">{stats.quran}</p>
-              <p className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Ayahs Read</p>
+            <div id="profile-stats-quran" className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl text-center border border-zinc-100 dark:border-zinc-800">
+              <p id="profile-stats-quran-value" className="text-3xl font-bold text-emerald-600 mb-1">{stats.quran}</p>
+              <p id="profile-stats-quran-label" className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Ayahs Read</p>
             </div>
-            <div className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl text-center border border-zinc-100 dark:border-zinc-800">
-              <p className="text-3xl font-bold text-emerald-600 mb-1">Free</p>
-              <p className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Plan</p>
+            <div id="profile-stats-plan" className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl text-center border border-zinc-100 dark:border-zinc-800">
+              <p id="profile-stats-plan-value" className="text-3xl font-bold text-emerald-600 mb-1">{profile?.is_pro ? 'Pro' : 'Free'}</p>
+              <p id="profile-stats-plan-label" className="text-xs text-zinc-500 uppercase font-bold tracking-widest">Plan</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
-          <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+        <div id="profile-bookmarks-card" className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
+          <h3 id="profile-bookmarks-title" className="text-xl font-bold mb-6 flex items-center gap-2">
             <Heart size={20} className="text-emerald-600" />
             Your Bookmarks
           </h3>
           {bookmarks.length > 0 ? (
-            <div className="space-y-4">
+            <div id="profile-bookmarks-list" className="space-y-4">
               {bookmarks.map((b) => (
-                <div key={b.id} className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                <div key={b.id} id={`profile-bookmark-${b.id}`} className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold rounded-full uppercase tracking-widest">
+                    <span id={`profile-bookmark-type-${b.id}`} className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold rounded-full uppercase tracking-widest">
                       {b.type}
                     </span>
-                    <span className="text-[10px] text-zinc-400">{new Date(b.created_at).toLocaleDateString()}</span>
+                    <span id={`profile-bookmark-date-${b.id}`} className="text-[10px] text-zinc-400">{new Date(b.created_at).toLocaleDateString()}</span>
                   </div>
-                  <p className="text-sm font-medium dark:text-zinc-200 line-clamp-2">
+                  <p id={`profile-bookmark-text-${b.id}`} className="text-sm font-medium dark:text-zinc-200 line-clamp-2">
                     {b.metadata?.text || 'No preview available'}
                   </p>
-                  <p className="text-[10px] text-emerald-600 mt-2 font-bold uppercase tracking-widest">
+                  <p id={`profile-bookmark-meta-${b.id}`} className="text-[10px] text-emerald-600 mt-2 font-bold uppercase tracking-widest">
                     {b.type === 'quran' ? `${b.metadata?.surahName} - Ayah ${b.metadata?.ayahNumber}` : `${b.metadata?.book} - Hadith ${b.metadata?.hadithNumber}`}
                   </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-zinc-500 text-sm italic">You haven't bookmarked anything yet.</p>
+            <p id="profile-bookmarks-empty" className="text-zinc-500 text-sm italic">You haven't bookmarked anything yet.</p>
           )}
         </div>
 
-        <div className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
+        <div id="profile-settings-card" className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl">
+            <div id="profile-setting-notifications" className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl">
               <div>
-                <p className="font-bold">Email Notifications</p>
-                <p className="text-xs text-zinc-500">Daily reminders and spiritual insights</p>
+                <p id="profile-setting-notifications-title" className="font-bold">Email Notifications</p>
+                <p id="profile-setting-notifications-desc" className="text-xs text-zinc-500">Daily reminders and spiritual insights</p>
               </div>
-              <div className="w-12 h-6 bg-emerald-600 rounded-full relative">
-                <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full" />
+              <div id="profile-setting-notifications-toggle" className="w-12 h-6 bg-emerald-600 rounded-full relative">
+                <div id="profile-setting-notifications-knob" className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full" />
               </div>
             </div>
           </div>
@@ -244,56 +247,58 @@ const ProfilePage = () => {
 };
 
 const Footer = () => (
-  <footer className="bg-white dark:bg-zinc-900 border-t border-emerald-100 dark:border-emerald-900/30 py-12 px-8">
-    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-      <div className="col-span-1 md:col-span-2">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+  <footer id="app-footer" className="bg-white dark:bg-zinc-900 border-t border-emerald-100 dark:border-emerald-900/30 py-12 px-8">
+    <div id="footer-content" className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div id="footer-brand-section" className="col-span-1 md:col-span-2">
+        <div id="footer-logo" className="flex items-center gap-3 mb-6">
+          <div id="footer-logo-icon" className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg">
             <Star size={24} fill="currentColor" className="text-gold" />
           </div>
-          <span className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">Nurul Quran</span>
+          <span id="footer-logo-text" className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">Nurul Quran</span>
         </div>
-        <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed max-w-md">
+        <p id="footer-description" className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed max-w-md">
           Spreading the light of Quranic wisdom and spiritual guidance. Join our journey towards inner peace and divine connection.
         </p>
       </div>
       
-      <div>
-        <h4 className="font-bold text-zinc-900 dark:text-zinc-100 mb-6 uppercase tracking-widest text-xs">Quick Links</h4>
-        <ul className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
-          <li><a href="/quran" className="hover:text-emerald-600 transition-colors">Holy Quran</a></li>
-          <li><a href="/hadith" className="hover:text-emerald-600 transition-colors">Hadith Library</a></li>
-          <li><a href="/about.html" className="hover:text-emerald-600 transition-colors">About Us</a></li>
-          <li><a href="/contact.html" className="hover:text-emerald-600 transition-colors">Contact</a></li>
-          <li><a href="/privacy-policy.html" className="hover:text-emerald-600 transition-colors">Privacy Policy</a></li>
-          <li><a href="/donate" className="hover:text-emerald-600 transition-colors">Support Us</a></li>
+      <div id="footer-links-section">
+        <h4 id="footer-links-title" className="font-bold text-zinc-900 dark:text-zinc-100 mb-6 uppercase tracking-widest text-xs">Quick Links</h4>
+        <ul id="footer-links-list" className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
+          <li><a id="footer-link-quran" href="/quran" className="hover:text-emerald-600 transition-colors">Holy Quran</a></li>
+          <li><a id="footer-link-hadith" href="/hadith" className="hover:text-emerald-600 transition-colors">Hadith Library</a></li>
+          <li><a id="footer-link-halal-stocks" href="/finance/halal-stocks" className="hover:text-emerald-600 transition-colors">Halal Stocks</a></li>
+          <li><a id="footer-link-community" href="/community/qa" className="hover:text-emerald-600 transition-colors">Community Board</a></li>
+          <li><a id="footer-link-about" href="/about.html" className="hover:text-emerald-600 transition-colors">About Us</a></li>
+          <li><a id="footer-link-contact" href="/contact.html" className="hover:text-emerald-600 transition-colors">Contact</a></li>
+          <li><a id="footer-link-privacy" href="/privacy-policy.html" className="hover:text-emerald-600 transition-colors">Privacy Policy</a></li>
+          <li><a id="footer-link-donate" href="/donate" className="hover:text-emerald-600 transition-colors">Support Us</a></li>
         </ul>
       </div>
 
-      <div>
-        <h4 className="font-bold text-zinc-900 dark:text-zinc-100 mb-6 uppercase tracking-widest text-xs">Connect With Us</h4>
-        <div className="flex gap-4 mb-6">
-          <a href="#" className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all">
+      <div id="footer-social-section">
+        <h4 id="footer-social-title" className="font-bold text-zinc-900 dark:text-zinc-100 mb-6 uppercase tracking-widest text-xs">Connect With Us</h4>
+        <div id="footer-social-links" className="flex gap-4 mb-6">
+          <a id="footer-social-twitter" href="#" className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all">
             <Twitter size={18} />
           </a>
-          <a href="#" className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all">
+          <a id="footer-social-facebook" href="#" className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all">
             <Facebook size={18} />
           </a>
-          <a href="#" className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all">
+          <a id="footer-social-instagram" href="#" className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all">
             <Instagram size={18} />
           </a>
-          <a href="#" className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all">
+          <a id="footer-social-youtube" href="#" className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all">
             <Youtube size={18} />
           </a>
         </div>
-        <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-          <Mail size={16} />
-          <span>contact@nurulquran.com</span>
+        <div id="footer-contact-info" className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+          <Mail id="footer-contact-icon" size={16} />
+          <span id="footer-contact-email">contact@nurulquran.com</span>
         </div>
       </div>
     </div>
-    <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-zinc-100 dark:border-zinc-800 text-center text-xs text-zinc-400">
-      <p>© {new Date().getFullYear()} Nurul Quran. All rights reserved. Made with ❤️ for the Ummah.</p>
+    <div id="footer-bottom" className="max-w-6xl mx-auto mt-12 pt-8 border-t border-zinc-100 dark:border-zinc-800 text-center text-xs text-zinc-400">
+      <p id="footer-copyright">© {new Date().getFullYear()} Nurul Quran. All rights reserved. Made with ❤️ for the Ummah.</p>
     </div>
   </footer>
 );
@@ -316,6 +321,18 @@ const AppContent = () => {
   const [touchStart, setTouchStart] = React.useState<number | null>(null);
   const [touchEnd, setTouchEnd] = React.useState<number | null>(null);
   const [showWelcome, setShowWelcome] = React.useState(false);
+  const [showSplash, setShowSplash] = React.useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleEnter = () => {
+    setShowSplash(false);
+  };
 
   React.useEffect(() => {
     const hasVisited = localStorage.getItem('has_visited');
@@ -379,14 +396,31 @@ const AppContent = () => {
   };
 
   return (
-    <div 
-      className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans"
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
+    <>
+      <AppBackground />
+      <AnimatePresence>
+        {showSplash && (
+          <motion.div
+            key="splash"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="fixed inset-0 z-[9999]"
+          >
+            <SplashPage onEnter={handleEnter} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div 
+        id="app-root"
+        className="min-h-screen text-white/90 font-sans"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
       <Navbar />
-      <main className="md:ml-64 min-h-screen pt-16 md:pt-0">
+      <main id="main-content" className="min-h-screen pt-[70px]">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/quran" element={<QuranPage />} />
@@ -398,6 +432,7 @@ const AppContent = () => {
           <Route path="/tasawwuf" element={<TasawwufPage />} />
           <Route path="/donate" element={<DonatePage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<ProfilePage />} />
           <Route path="/mission" element={<MissionPage />} />
           <Route path="/finance/halal-stocks" element={<HalalStocksPage />} />
           <Route path="/finance/zakat-calculator" element={<ZakatCalculatorPage />} />
@@ -419,12 +454,14 @@ const AppContent = () => {
       <AnimatePresence>
         {showWelcome && (
           <motion.div
+            id="welcome-modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-emerald-950/40 backdrop-blur-md"
           >
             <motion.div
+              id="welcome-modal-content"
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -433,23 +470,24 @@ const AppContent = () => {
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl" />
               <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-gold/10 rounded-full blur-3xl" />
 
-              <div className="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center text-white mx-auto mb-8 shadow-xl shadow-emerald-900/20">
+              <div id="welcome-modal-icon" className="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center text-white mx-auto mb-8 shadow-xl shadow-emerald-900/20">
                 <Star size={40} fill="currentColor" className="text-gold" />
               </div>
 
-              <h2 className="text-3xl font-bold text-emerald-900 dark:text-emerald-100 mb-4">Welcome to Nurul Quran</h2>
-              <p className="text-zinc-500 dark:text-zinc-400 mb-8 leading-relaxed">
+              <h2 id="welcome-modal-title" className="text-3xl font-bold text-emerald-900 dark:text-emerald-100 mb-4">Welcome to Nurul Quran</h2>
+              <p id="welcome-modal-description" className="text-zinc-500 dark:text-zinc-400 mb-8 leading-relaxed">
                 Spreading the light of Quranic wisdom and spiritual guidance. We're honored to have you join our community.
               </p>
 
               <div className="space-y-4">
                 <button
+                  id="welcome-modal-start"
                   onClick={closeWelcome}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-emerald-900/20"
                 >
                   Start Your Journey
                 </button>
-                <p className="text-[10px] text-zinc-400 uppercase font-bold tracking-widest">
+                <p id="welcome-modal-footer-text" className="text-[10px] text-zinc-400 uppercase font-bold tracking-widest">
                   Spiritual Guidance for the Modern World
                 </p>
               </div>
@@ -457,6 +495,7 @@ const AppContent = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </>
   );
 }

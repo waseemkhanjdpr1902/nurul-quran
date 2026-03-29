@@ -3,11 +3,24 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as firebaseSignOu
 import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp, getDocFromServer, increment, collection, query, where, getDocs, deleteDoc, addDoc, orderBy, onSnapshot, limit, arrayUnion } from 'firebase/firestore';
 
 // Import the Firebase configuration
-import firebaseConfig from '../../firebase-applet-config.json';
+let firebaseConfig: any;
+try {
+  // @ts-ignore
+  const config = await import('../../firebase-applet-config.json');
+  firebaseConfig = config.default || config;
+} catch (e) {
+  firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    firestoreDatabaseId: import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID
+  };
+}
 
 // Initialize Firebase SDK
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId || '(default)');
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 

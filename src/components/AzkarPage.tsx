@@ -103,6 +103,7 @@ export const AzkarPage = () => {
 
         <div className="relative w-full md:w-64">
           <select
+            id="azkar-category-select"
             value={activeTab}
             onChange={(e) => {
               setActiveTab(e.target.value as keyof typeof AZKAR_DATA);
@@ -131,6 +132,7 @@ export const AzkarPage = () => {
             <motion.div
               layout
               key={item.id}
+              id={`azkar-item-${item.id}`}
               className={`p-6 rounded-3xl border transition-all ${
                 isDone 
                   ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-900/30' 
@@ -154,6 +156,7 @@ export const AzkarPage = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <button
+                    id={`azkar-increment-${item.id}`}
                     onClick={() => handleIncrement(item.id, item.count)}
                     className={`w-16 h-16 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-90 ${
                       isDone 
@@ -161,7 +164,7 @@ export const AzkarPage = () => {
                         : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100'
                     }`}
                   >
-                    <span className="text-xl font-bold">{count}</span>
+                    <span id={`azkar-count-${item.id}`} className="text-xl font-bold">{count}</span>
                     <span className="text-[10px] uppercase font-bold opacity-60">/{item.count}</span>
                   </button>
                   {isDone && (
@@ -172,6 +175,7 @@ export const AzkarPage = () => {
                 </div>
                 
                 <button
+                  id={`azkar-reset-${item.id}`}
                   onClick={() => handleReset(item.id)}
                   className="p-2 text-zinc-400 hover:text-emerald-600 transition-colors"
                   title="Reset counter"

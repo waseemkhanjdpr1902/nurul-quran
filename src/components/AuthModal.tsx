@@ -63,14 +63,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           <div className="p-8">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">
+                <h2 id="auth-modal-title" className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">
                   {isLogin ? 'Welcome Back' : 'Join Nurul Quran'}
                 </h2>
-                <p className="text-zinc-500 text-sm mt-1">
+                <p id="auth-modal-subtitle" className="text-zinc-500 text-sm mt-1">
                   {isLogin ? 'Sign in to continue your journey' : 'Create an account to track your progress'}
                 </p>
               </div>
               <button 
+                id="auth-modal-close-btn"
                 onClick={onClose}
                 className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors"
               >
@@ -79,7 +80,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             </div>
 
             {success ? (
-              <div className="text-center py-8">
+              <div id="auth-success-container" className="text-center py-8">
                 <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Mail className="text-emerald-600" size={32} />
                 </div>
@@ -88,6 +89,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   We've sent a confirmation link to <strong>{email}</strong>. Please verify your email to continue.
                 </p>
                 <button
+                  id="auth-success-close-btn"
                   onClick={onClose}
                   className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-bold hover:bg-emerald-700 transition-all"
                 >
@@ -97,6 +99,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             ) : (
               <div className="space-y-6">
                 <button
+                  id="auth-google-login-btn"
                   onClick={handleGoogleLogin}
                   disabled={googleLoading || loading}
                   className="w-full flex items-center justify-center gap-3 py-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl font-bold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-all disabled:opacity-50"
@@ -114,13 +117,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   </div>
                 </div>
 
-                <form onSubmit={handleAuth} className="space-y-4">
+                <form id="auth-form" onSubmit={handleAuth} className="space-y-4">
                   {!isLogin && (
                     <div className="space-y-1">
                       <label className="text-xs font-bold text-zinc-400 uppercase ml-1">Full Name</label>
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
                         <input
+                          id="auth-full-name-input"
                           type="text"
                           required
                           value={fullName}
@@ -137,6 +141,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
                     <input
+                      id="auth-email-input"
                       type="email"
                       required
                       value={email}
@@ -152,6 +157,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
                     <input
+                      id="auth-password-input"
                       type="password"
                       required
                       value={password}
@@ -163,13 +169,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 {error && (
-                  <div className="flex items-center gap-2 p-4 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-2xl text-sm">
+                  <div id="auth-error-message" className="flex items-center gap-2 p-4 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-2xl text-sm">
                     <AlertCircle size={18} />
                     <p>{error}</p>
                   </div>
                 )}
 
                 <button
+                  id="auth-submit-btn"
                   type="submit"
                   disabled={loading}
                   className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-bold hover:bg-emerald-700 disabled:opacity-50 transition-all flex items-center justify-center gap-2 mt-4"
@@ -179,6 +186,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
                 <div className="text-center mt-6">
                   <button
+                    id="auth-toggle-mode-btn"
                     type="button"
                     onClick={() => setIsLogin(!isLogin)}
                     className="text-sm font-medium text-emerald-600 hover:text-emerald-700"

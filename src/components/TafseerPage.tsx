@@ -300,9 +300,10 @@ export const TafseerPage = () => {
           <Book className="text-emerald-600" />
           Tafseer Ibn Katheer
         </h1>
-        <form onSubmit={handleSearch} className="relative">
+        <form id="tafseer-search-form" onSubmit={handleSearch} className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
           <input
+            id="tafseer-search-input"
             type="text"
             placeholder="Search Surah or 2:255..."
             value={searchQuery}
@@ -315,13 +316,13 @@ export const TafseerPage = () => {
       {/* Breadcrumbs & Controls */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <nav className="flex items-center gap-2 text-sm text-zinc-500">
-          <Link to="/tafseer" className="hover:text-emerald-600 transition-colors">Tafseer</Link>
+          <Link id="tafseer-breadcrumb-home" to="/tafseer" className="hover:text-emerald-600 transition-colors">Tafseer</Link>
           {currentSurah && (
             <>
               <ChevronRight size={14} />
-              <span className="font-medium text-emerald-700 dark:text-emerald-400">{currentSurah.englishName}</span>
+              <span id="tafseer-breadcrumb-surah" className="font-medium text-emerald-700 dark:text-emerald-400">{currentSurah.englishName}</span>
               <ChevronRight size={14} />
-              <span className="font-medium">Ayah {selectedAyah}</span>
+              <span id="tafseer-breadcrumb-ayah" className="font-medium">Ayah {selectedAyah}</span>
             </>
           )}
         </nav>
@@ -329,6 +330,7 @@ export const TafseerPage = () => {
         <div className="flex items-center gap-2">
           <div className="relative group">
             <button
+              id="tafseer-language-toggle"
               className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30 rounded-xl text-sm font-medium hover:border-emerald-400 transition-all"
             >
               <Languages size={16} className="text-emerald-600" />
@@ -338,6 +340,7 @@ export const TafseerPage = () => {
               {LANGUAGES.map((lang) => (
                 <button
                   key={lang.id}
+                  id={`tafseer-language-option-${lang.id}`}
                   onClick={() => setSelectedLanguage(lang.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3 text-sm text-left hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors ${selectedLanguage === lang.id ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 font-bold' : 'text-zinc-600 dark:text-zinc-400'}`}
                 >
@@ -348,6 +351,7 @@ export const TafseerPage = () => {
             </div>
           </div>
           <button
+            id="tafseer-share-btn"
             onClick={shareTafseer}
             className="p-2 bg-white dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30 rounded-xl hover:border-emerald-400 transition-all text-zinc-500 hover:text-emerald-600"
             title="Share Tafseer"
@@ -430,6 +434,7 @@ export const TafseerPage = () => {
                 <div className="flex justify-center mb-4">
                   <div className="inline-flex items-center bg-white/20 backdrop-blur-md rounded-xl p-1 border border-white/10">
                     <button
+                      id="tafseer-arabic-font-decrease"
                       onClick={decreaseArabic}
                       disabled={arabicFontSize <= minArabicFont}
                       className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/20 disabled:opacity-30 transition-all font-bold"
@@ -438,6 +443,7 @@ export const TafseerPage = () => {
                       A-
                     </button>
                     <button
+                      id="tafseer-arabic-font-reset"
                       onClick={resetArabic}
                       className="px-3 h-8 flex items-center justify-center rounded-lg hover:bg-white/20 transition-all text-xs font-bold"
                       title="Reset font size"
@@ -445,6 +451,7 @@ export const TafseerPage = () => {
                       A {arabicFontSize}
                     </button>
                     <button
+                      id="tafseer-arabic-font-increase"
                       onClick={increaseArabic}
                       disabled={arabicFontSize >= maxArabicFont}
                       className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/20 disabled:opacity-30 transition-all font-bold"
@@ -459,6 +466,7 @@ export const TafseerPage = () => {
                   Surah {currentSurah?.englishName} • Ayah {selectedAyah}
                 </div>
                 <p 
+                  id="tafseer-ayah-text"
                   className="font-quran leading-loose mb-8 transition-all duration-200"
                   style={{ fontSize: `${arabicFontSize}px` }}
                 >
@@ -466,6 +474,7 @@ export const TafseerPage = () => {
                 </p>
                 <div className="flex items-center justify-center gap-4">
                   <button
+                    id="tafseer-back-to-quran"
                     onClick={() => navigate(`/quran/${selectedSurah}-${currentSurah?.englishName.toLowerCase().replace(/\s+/g, '-')}`)}
                     className="flex items-center gap-2 px-6 py-3 bg-white text-emerald-700 font-bold rounded-2xl hover:bg-emerald-50 transition-all shadow-lg"
                   >
@@ -478,7 +487,7 @@ export const TafseerPage = () => {
 
             {/* Translation Card */}
             {translationText && (
-              <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
+              <div id="tafseer-translation-card" className="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
                 <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-600 mb-2">Translation (Pickthall)</h4>
                 <p className="text-zinc-700 dark:text-zinc-300 italic leading-relaxed">
                   {translationText}
@@ -487,7 +496,7 @@ export const TafseerPage = () => {
             )}
 
             {/* Tafseer Card */}
-            <div className="bg-white dark:bg-zinc-900 rounded-[40px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm overflow-hidden">
+            <div id="tafseer-commentary-card" className="bg-white dark:bg-zinc-900 rounded-[40px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm overflow-hidden">
               <div className="p-6 border-b border-emerald-50 dark:border-emerald-900/10 flex items-center justify-between bg-emerald-50/30 dark:bg-emerald-900/5">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white">
@@ -505,6 +514,7 @@ export const TafseerPage = () => {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center bg-emerald-100/50 dark:bg-emerald-900/20 rounded-xl p-1 border border-emerald-200/50 dark:border-emerald-800/30">
                     <button
+                      id="tafseer-font-decrease"
                       onClick={decreaseTafseer}
                       disabled={fontSize <= minFont}
                       className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 disabled:opacity-30 transition-all font-bold text-emerald-700 dark:text-emerald-400"
@@ -513,6 +523,7 @@ export const TafseerPage = () => {
                       A-
                     </button>
                     <button
+                      id="tafseer-font-reset"
                       onClick={resetTafseer}
                       className="px-3 h-8 flex items-center justify-center rounded-lg hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-all text-xs font-bold text-emerald-700 dark:text-emerald-400"
                       title="Reset font size"
@@ -520,6 +531,7 @@ export const TafseerPage = () => {
                       A {fontSize}
                     </button>
                     <button
+                      id="tafseer-font-increase"
                       onClick={increaseTafseer}
                       disabled={fontSize >= maxFont}
                       className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 disabled:opacity-30 transition-all font-bold text-emerald-700 dark:text-emerald-400"
@@ -535,6 +547,7 @@ export const TafseerPage = () => {
               </div>
               <div className="p-8 md:p-12">
                 <div 
+                  id="tafseer-content-body"
                   className={`prose prose-emerald dark:prose-invert max-w-none leading-relaxed overflow-y-auto max-h-[600px] transition-all duration-200 ${currentLang.dir === 'rtl' ? 'font-urdu text-right' : ''}`}
                   dir={currentLang.dir}
                   style={{ 
@@ -554,6 +567,7 @@ export const TafseerPage = () => {
                 <div className="flex items-center gap-2">
                   {selectedAyah > 1 ? (
                     <button
+                      id="tafseer-prev-ayah"
                       onClick={() => navigateAyah('prev')}
                       className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl transition-all"
                     >
@@ -562,6 +576,7 @@ export const TafseerPage = () => {
                     </button>
                   ) : selectedSurah > 1 ? (
                     <button
+                      id="tafseer-prev-surah"
                       onClick={() => {
                         const prevSurah = surahs.find(s => s.number === selectedSurah - 1);
                         if (prevSurah) navigate(`/tafseer/${selectedSurah - 1}/${prevSurah.numberOfAyahs}`);
@@ -575,7 +590,7 @@ export const TafseerPage = () => {
                 </div>
 
                 <div className="hidden md:flex items-center gap-2">
-                  <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  <span id="tafseer-current-location" className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
                     {selectedSurah}:{selectedAyah}
                   </span>
                 </div>
@@ -583,6 +598,7 @@ export const TafseerPage = () => {
                 <div className="flex items-center gap-2">
                   {currentSurah && selectedAyah < currentSurah.numberOfAyahs ? (
                     <button
+                      id="tafseer-next-ayah"
                       onClick={() => navigateAyah('next')}
                       className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl transition-all"
                     >
@@ -591,6 +607,7 @@ export const TafseerPage = () => {
                     </button>
                   ) : selectedSurah < 114 ? (
                     <button
+                      id="tafseer-next-surah"
                       onClick={() => navigate(`/tafseer/${selectedSurah + 1}/1`)}
                       className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl transition-all"
                     >

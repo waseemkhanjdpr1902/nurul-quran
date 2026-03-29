@@ -289,6 +289,7 @@ export const SpiritualDashboard = () => {
             
             <div className="relative">
               <button 
+                id="dashboard-share-ayah-btn"
                 onClick={() => setShowShare(!showShare)}
                 className="flex items-center gap-2 px-4 py-2 bg-gold/10 hover:bg-gold/20 text-gold rounded-xl transition-all text-xs font-bold border border-gold/20"
               >
@@ -298,23 +299,25 @@ export const SpiritualDashboard = () => {
               
               {showShare && (
                 <motion.div 
+                  id="dashboard-share-menu"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-emerald-100 dark:border-emerald-900/30 p-2 z-50 overflow-hidden"
                 >
-                  <button onClick={() => handleShare('copy')} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-400 transition-colors">
+                  <button id="dashboard-share-copy" onClick={() => handleShare('copy')} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-400 transition-colors">
                     <Copy size={14} /> Copy Link
                   </button>
-                  <button onClick={() => handleShare('whatsapp')} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-400 transition-colors">
+                  <button id="dashboard-share-whatsapp" onClick={() => handleShare('whatsapp')} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-400 transition-colors">
                     <MessageCircle size={14} /> WhatsApp
                   </button>
-                  <button onClick={() => handleShare('twitter')} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-400 transition-colors">
+                  <button id="dashboard-share-twitter" onClick={() => handleShare('twitter')} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-400 transition-colors">
                     <Twitter size={14} /> Twitter
                   </button>
-                  <button onClick={() => handleShare('facebook')} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-400 transition-colors">
+                  <button id="dashboard-share-facebook" onClick={() => handleShare('facebook')} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-400 transition-colors">
                     <Facebook size={14} /> Facebook
                   </button>
                   <button 
+                    id="dashboard-share-download"
                     onClick={handleDownloadImage}
                     disabled={isDownloading}
                     className="w-full flex items-center gap-3 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl text-xs font-medium text-gold transition-colors border-t border-zinc-100 dark:border-zinc-800 mt-1 pt-3 disabled:opacity-50"
@@ -328,25 +331,26 @@ export const SpiritualDashboard = () => {
           </div>
 
           {dailyVerse ? (
-            <div className="mb-8">
-              <p className="text-3xl md:text-5xl font-quran leading-relaxed mb-6 text-emerald-50 text-center md:text-right">
+            <div id="dashboard-daily-verse-container" className="mb-8">
+              <p id="dashboard-daily-verse-arabic" className="text-3xl md:text-5xl font-quran leading-relaxed mb-6 text-emerald-50 text-center md:text-right">
                 {dailyVerse.text}
               </p>
-              <p className="text-emerald-100/70 text-lg italic mb-2 leading-relaxed">
+              <p id="dashboard-daily-verse-translation" className="text-emerald-100/70 text-lg italic mb-2 leading-relaxed">
                 "{dailyVerse.translation}"
               </p>
-              <p className="text-gold font-bold text-sm uppercase tracking-wider">
+              <p id="dashboard-daily-verse-surah" className="text-gold font-bold text-sm uppercase tracking-wider">
                 — Surah {dailyVerse.surah}
               </p>
             </div>
           ) : (
-            <div className="h-48 flex items-center justify-center">
+            <div id="dashboard-daily-verse-loading" className="h-48 flex items-center justify-center">
               <div className="animate-pulse text-gold">Loading daily wisdom...</div>
             </div>
           )}
 
           <div className="flex flex-wrap gap-4">
             <button 
+              id="dashboard-continue-journey-btn"
               onClick={() => navigate('/quran')}
               className="bg-emerald-500 hover:bg-emerald-400 text-white px-8 py-4 rounded-2xl font-bold transition-all flex items-center gap-2 group shadow-lg shadow-emerald-950/20"
             >
@@ -361,6 +365,7 @@ export const SpiritualDashboard = () => {
       <div className="space-y-6">
         {/* Prayer Times Widget */}
         <motion.div 
+          id="dashboard-prayer-times-widget"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
@@ -372,8 +377,8 @@ export const SpiritualDashboard = () => {
                 <Clock size={20} />
               </div>
               <div>
-                <h3 className="font-bold text-zinc-900 dark:text-zinc-100">Prayer Times</h3>
-                <div className="flex items-center gap-1 text-[10px] text-zinc-400 uppercase font-bold tracking-tighter">
+                <h3 id="dashboard-prayer-times-title" className="font-bold text-zinc-900 dark:text-zinc-100">Prayer Times</h3>
+                <div id="dashboard-location-display" className="flex items-center gap-1 text-[10px] text-zinc-400 uppercase font-bold tracking-tighter">
                   <MapPin size={10} />
                   {isDetecting ? (
                     <span className="flex items-center gap-1">
@@ -385,9 +390,9 @@ export const SpiritualDashboard = () => {
               </div>
             </div>
             {nextPrayer && (
-              <div className="text-right">
-                <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">Next: {nextPrayer.name}</p>
-                <p className="text-sm font-mono font-bold text-gold">{countdown}</p>
+              <div id="dashboard-next-prayer-info" className="text-right">
+                <p id="dashboard-next-prayer-name" className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">Next: {nextPrayer.name}</p>
+                <p id="dashboard-next-prayer-countdown" className="text-sm font-mono font-bold text-gold">{countdown}</p>
               </div>
             )}
           </div>
@@ -395,6 +400,7 @@ export const SpiritualDashboard = () => {
           <AnimatePresence>
             {showManualInput && (
               <motion.div 
+                id="dashboard-manual-location-input"
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
@@ -402,6 +408,7 @@ export const SpiritualDashboard = () => {
               >
                 <div className="flex gap-2">
                   <input 
+                    id="dashboard-city-input"
                     type="text" 
                     placeholder="Enter city manually..."
                     value={manualCity}
@@ -409,6 +416,7 @@ export const SpiritualDashboard = () => {
                     className="flex-1 px-3 py-2 bg-zinc-50 dark:bg-zinc-800 rounded-xl text-xs border border-emerald-100 dark:border-emerald-900/30 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   />
                   <button 
+                    id="dashboard-city-search-btn"
                     onClick={handleManualSearch}
                     className="p-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors"
                   >
@@ -419,11 +427,12 @@ export const SpiritualDashboard = () => {
             )}
           </AnimatePresence>
 
-          <div className="space-y-3">
+          <div id="dashboard-prayer-list" className="space-y-3">
             {prayerTimes ? (
               Object.entries(prayerTimes).map(([name, time]) => (
                 <div 
                   key={name}
+                  id={`dashboard-prayer-item-${name.toLowerCase()}`}
                   className={`flex items-center justify-between p-3 rounded-2xl transition-all ${
                     nextPrayer?.name === name 
                       ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20 scale-[1.02] border border-gold/30' 
@@ -444,6 +453,7 @@ export const SpiritualDashboard = () => {
           </div>
           
           <button 
+            id="dashboard-change-city-btn"
             onClick={() => setShowManualInput(!showManualInput)}
             className="w-full mt-4 text-[10px] text-zinc-400 hover:text-emerald-600 transition-colors font-bold uppercase tracking-widest"
           >
@@ -453,6 +463,7 @@ export const SpiritualDashboard = () => {
 
         {/* Progress Widget */}
         <motion.div 
+          id="dashboard-progress-widget"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
@@ -462,22 +473,22 @@ export const SpiritualDashboard = () => {
             <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-900/20">
               <Zap size={20} />
             </div>
-            <h3 className="font-bold text-zinc-900 dark:text-zinc-100">Spiritual Progress</h3>
+            <h3 id="dashboard-progress-title" className="font-bold text-zinc-900 dark:text-zinc-100">Spiritual Progress</h3>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 border border-emerald-100 dark:border-emerald-900/30">
-              <p className="text-2xl font-bold mb-1 text-emerald-700 dark:text-emerald-400">{stats.quran}</p>
+            <div id="dashboard-stat-quran" className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 border border-emerald-100 dark:border-emerald-900/30">
+              <p id="dashboard-stat-quran-value" className="text-2xl font-bold mb-1 text-emerald-700 dark:text-emerald-400">{stats.quran}</p>
               <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-400">Ayahs</p>
             </div>
-            <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 border border-emerald-100 dark:border-emerald-900/30">
-              <p className="text-2xl font-bold mb-1 text-emerald-700 dark:text-emerald-400">{stats.azkar}</p>
+            <div id="dashboard-stat-azkar" className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 border border-emerald-100 dark:border-emerald-900/30">
+              <p id="dashboard-stat-azkar-value" className="text-2xl font-bold mb-1 text-emerald-700 dark:text-emerald-400">{stats.azkar}</p>
               <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-400">Azkar</p>
             </div>
           </div>
           
           {!user && (
-            <p className="text-[10px] mt-4 text-zinc-400 text-center italic">
+            <p id="dashboard-signin-prompt" className="text-[10px] mt-4 text-zinc-400 text-center italic">
               Sign in to track your progress
             </p>
           )}

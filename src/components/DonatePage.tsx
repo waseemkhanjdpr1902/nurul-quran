@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { CreditCard, Heart, ShieldCheck, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useAuth } from '../contexts/AuthContext';
+import { db, collection, addDoc } from '../lib/firebase';
 
 export const DonatePage = () => {
+  const { user } = useAuth();
   const [amount, setAmount] = useState<number>(500);
   const [isRecurring, setIsRecurring] = useState(false);
 
@@ -22,12 +25,43 @@ export const DonatePage = () => {
         name: "Nur al-Huda",
         description: isRecurring ? "Monthly Support" : "One-time Donation",
         order_id: order.id,
-        handler: function (response: any) {
-          alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+        handler: async function (response: any) {
+          try {
+            // Verify payment on server
+            const verifyRes = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyData.status === "ok") {
+              // Record donation in Firestore
+              await addDoc(collection(db, 'donations'), {
+                user_id: user?.uid || 'anonymous',
+                user_email: user?.email || 'anonymous',
+                amount: amount,
+                is_recurring: isRecurring,
+                payment_id: response.razorpay_payment_id,
+                date: new Date().toISOString()
+              });
+
+              alert("Payment Successful! Thank you for your support. Payment ID: " + response.razorpay_payment_id);
+            } else {
+              alert("Payment verification failed. Please contact support.");
+            }
+          } catch (err) {
+            console.error("Verification error:", err);
+            alert("Error verifying payment. Please contact support.");
+          }
         },
         prefill: {
-          name: "User Name",
-          email: "user@example.com",
+          name: user?.displayName || "User Name",
+          email: user?.email || "user@example.com",
         },
         theme: {
           color: "#059669",
@@ -58,12 +92,14 @@ export const DonatePage = () => {
             <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">Make a Contribution</h2>
             <div className="flex gap-2 p-1 bg-emerald-50 dark:bg-zinc-800 rounded-2xl">
               <button
+                id="donate-type-onetime"
                 onClick={() => setIsRecurring(false)}
                 className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${!isRecurring ? 'bg-white dark:bg-zinc-700 shadow-sm text-emerald-600' : 'text-zinc-500'}`}
               >
                 One-time
               </button>
               <button
+                id="donate-type-monthly"
                 onClick={() => setIsRecurring(true)}
                 className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${isRecurring ? 'bg-white dark:bg-zinc-700 shadow-sm text-emerald-600' : 'text-zinc-500'}`}
               >
@@ -76,6 +112,7 @@ export const DonatePage = () => {
             {[100, 500, 1000, 2000, 5000].map((val) => (
               <button
                 key={val}
+                id={`donate-amount-${val}`}
                 onClick={() => setAmount(val)}
                 className={`py-4 rounded-2xl border-2 font-bold transition-all text-lg ${amount === val ? 'bg-emerald-600 text-white border-emerald-600 shadow-lg shadow-emerald-100' : 'border-emerald-50 dark:border-emerald-900/20 text-zinc-600 hover:border-emerald-400'}`}
               >
@@ -84,6 +121,7 @@ export const DonatePage = () => {
             ))}
             <div className="relative">
               <input
+                id="donate-amount-custom"
                 type="number"
                 placeholder="Custom"
                 onChange={(e) => setAmount(Number(e.target.value))}
@@ -114,6 +152,7 @@ export const DonatePage = () => {
           </div>
 
           <button
+            id="donate-submit-button"
             onClick={handleDonate}
             className="w-full bg-emerald-600 text-white py-5 rounded-[24px] font-bold text-xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 dark:shadow-none flex items-center justify-center gap-3"
           >

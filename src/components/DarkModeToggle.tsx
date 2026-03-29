@@ -8,13 +8,14 @@ export const DarkModeToggle = () => {
 
   return (
     <motion.button
+      id="dark-mode-toggle-btn"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       onClick={toggleTheme}
       className="p-3 bg-white dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30 rounded-2xl shadow-sm text-emerald-600 dark:text-emerald-400 hover:shadow-md transition-all"
       aria-label="Toggle Dark Mode"
     >
-      {isDark ? <Sun size={20} /> : <Moon size={20} />}
+      {isDark ? <Sun id="dark-mode-sun-icon" size={20} /> : <Moon id="dark-mode-moon-icon" size={20} />}
     </motion.button>
   );
 };

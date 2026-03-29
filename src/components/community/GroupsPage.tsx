@@ -83,6 +83,7 @@ export const GroupsPage: React.FC = () => {
         {GROUPS_DATA.map((group, i) => (
           <motion.div
             key={group.id}
+            id={`group-card-${group.id}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
@@ -114,6 +115,7 @@ export const GroupsPage: React.FC = () => {
                 </span>
               </div>
               <button
+                id={`group-join-btn-${group.id}`}
                 onClick={(e) => handleJoin(e, group.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                   joinedGroups.includes(group.id)

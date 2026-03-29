@@ -87,10 +87,11 @@ export const AnonymousPage: React.FC = () => {
       </div>
 
       <div className="bg-white dark:bg-zinc-900 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm p-8 mb-12">
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form id="anonymous-question-form" onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Your Question</label>
             <textarea
+              id="anonymous-question-body"
               required
               rows={5}
               placeholder="Type your question here..."
@@ -103,6 +104,7 @@ export const AnonymousPage: React.FC = () => {
             <div>
               <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Category</label>
               <select
+                id="anonymous-question-category"
                 className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all font-bold"
                 value={newQuestion.category}
                 onChange={(e) => setNewQuestion({ ...newQuestion, category: e.target.value })}
@@ -114,6 +116,7 @@ export const AnonymousPage: React.FC = () => {
             </div>
             <div className="flex items-end">
               <button
+                id="anonymous-question-submit"
                 type="submit"
                 disabled={isSubmitting}
                 className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20 disabled:opacity-50"
@@ -139,6 +142,7 @@ export const AnonymousPage: React.FC = () => {
             {questions.map((q) => (
               <motion.div
                 key={q.id}
+                id={`anonymous-question-card-${q.id}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white dark:bg-zinc-900 rounded-[32px] border border-zinc-100 dark:border-zinc-800 overflow-hidden shadow-sm"
@@ -166,6 +170,7 @@ export const AnonymousPage: React.FC = () => {
                         Answered on {new Date(q.answerTimestamp).toLocaleDateString()}
                       </span>
                       <button
+                        id={`anonymous-question-upvote-${q.id}`}
                         onClick={() => handleUpvote(q.id)}
                         className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-zinc-800 text-emerald-600 rounded-lg text-xs font-bold hover:bg-emerald-50 dark:hover:bg-zinc-700 transition-all shadow-sm"
                       >

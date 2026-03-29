@@ -58,11 +58,12 @@ export const TasbeehCounter = () => {
             <Zap size={24} />
           </div>
           <div>
-            <h3 className="font-bold text-xl text-zinc-900 dark:text-zinc-100">Digital Tasbeeh</h3>
-            <p className="text-[10px] text-zinc-400 uppercase font-bold tracking-widest">Spiritual Counter</p>
+            <h3 id="tasbeeh-title" className="font-bold text-xl text-zinc-900 dark:text-zinc-100">Digital Tasbeeh</h3>
+            <p id="tasbeeh-subtitle" className="text-[10px] text-zinc-400 uppercase font-bold tracking-widest">Spiritual Counter</p>
           </div>
         </div>
         <button 
+          id="tasbeeh-reset-btn"
           onClick={reset}
           className="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-xl text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all active:scale-90"
           title="Reset All"
@@ -78,7 +79,7 @@ export const TasbeehCounter = () => {
           const isCompleted = count === target;
 
           return (
-            <div key={name} className="flex flex-col items-center gap-4">
+            <div key={name} id={`tasbeeh-item-${name.toLowerCase()}`} className="flex flex-col items-center gap-4">
               <div className="relative w-32 h-32 group">
                 {/* Progress Ring */}
                 <svg className="w-full h-full transform -rotate-90">
@@ -107,6 +108,7 @@ export const TasbeehCounter = () => {
                 
                 {/* Counter Button */}
                 <button
+                  id={`tasbeeh-btn-${name.toLowerCase()}`}
                   onClick={() => increment(name as keyof typeof targets)}
                   className={`absolute inset-2 rounded-full flex flex-col items-center justify-center transition-all active:scale-95 ${
                     isCompleted 
@@ -114,17 +116,18 @@ export const TasbeehCounter = () => {
                       : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30'
                   }`}
                 >
-                  <span className="text-2xl font-bold font-mono">{count}</span>
+                  <span id={`tasbeeh-count-${name.toLowerCase()}`} className="text-2xl font-bold font-mono">{count}</span>
                   <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">/{target}</span>
                 </button>
               </div>
               
               <div className="text-center">
-                <p className={`text-xs font-bold uppercase tracking-widest ${isCompleted ? 'text-gold' : 'text-zinc-500 dark:text-zinc-400'}`}>
+                <p id={`tasbeeh-label-${name.toLowerCase()}`} className={`text-xs font-bold uppercase tracking-widest ${isCompleted ? 'text-gold' : 'text-zinc-500 dark:text-zinc-400'}`}>
                   {name}
                 </p>
                 {isCompleted && (
                   <motion.p 
+                    id={`tasbeeh-success-${name.toLowerCase()}`}
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="text-[10px] text-emerald-600 font-bold mt-1"

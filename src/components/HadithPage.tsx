@@ -189,6 +189,7 @@ export const HadithPage = () => {
         
         <div className="flex flex-col sm:flex-row gap-3">
           <select 
+            id="hadith-book-select"
             value={book}
             onChange={(e) => {
               setBook(e.target.value);
@@ -206,6 +207,7 @@ export const HadithPage = () => {
 
           <div className="relative">
             <select 
+              id="hadith-topic-select"
               value={activeTopic}
               onChange={(e) => {
                 setActiveTopic(e.target.value);
@@ -223,6 +225,7 @@ export const HadithPage = () => {
           <div className="relative flex-1 md:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
             <input
+              id="hadith-search-input"
               type="text"
               placeholder="Search Hadith..."
               value={search}
@@ -241,6 +244,7 @@ export const HadithPage = () => {
         {topics.map((topic) => (
           <button
             key={topic}
+            id={`hadith-topic-filter-${topic.toLowerCase().replace(/\s+/g, '-')}`}
             onClick={() => {
               setActiveTopic(topic);
               setPage(1);
@@ -270,6 +274,7 @@ export const HadithPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 key={h.id}
+                id={`hadith-card-${h.id}`}
                 className="bg-white dark:bg-zinc-900 p-8 rounded-[40px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm hover:shadow-md transition-all group"
               >
                 <div className="flex items-center justify-between mb-8">
@@ -285,6 +290,7 @@ export const HadithPage = () => {
                     </div>
                     {user && (
                       <button 
+                        id={`hadith-bookmark-${book}-${h.hadithNumber}`}
                         onClick={() => toggleBookmark(h)}
                         disabled={bookmarkLoading === `${book}-${h.hadithNumber}`}
                         className={`p-2 rounded-full transition-all ${
@@ -303,6 +309,7 @@ export const HadithPage = () => {
                       </button>
                     )}
                     <button 
+                      id={`hadith-play-${h.id}`}
                       onClick={() => playHadith(h)}
                       className={`p-2 rounded-full transition-all ${
                         playingId === h.id
@@ -338,6 +345,7 @@ export const HadithPage = () => {
 
           <div className="flex items-center justify-center gap-6 mt-12">
             <button 
+              id="hadith-pagination-prev"
               disabled={page === 1}
               onClick={() => setPage(p => p - 1)}
               className="p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30 text-emerald-600 disabled:opacity-30 hover:border-emerald-400 transition-all"
@@ -345,9 +353,10 @@ export const HadithPage = () => {
               <ChevronLeft size={24} />
             </button>
             <div className="px-6 py-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
-              <span className="font-bold text-emerald-700 dark:text-emerald-400">Page {page}</span>
+              <span id="hadith-pagination-current" className="font-bold text-emerald-700 dark:text-emerald-400">Page {page}</span>
             </div>
             <button 
+              id="hadith-pagination-next"
               onClick={() => setPage(p => p + 1)}
               className="p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30 text-emerald-600 hover:border-emerald-400 transition-all"
             >

@@ -57,33 +57,35 @@ export const MissionPage = () => {
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto pb-32 md:pb-16">
       <motion.div 
+        id="mission-header"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-16"
       >
-        <div className="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-emerald-900/20">
+        <div id="mission-icon-container" className="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-emerald-900/20">
           <Shield size={40} />
         </div>
-        <h1 className="text-4xl font-bold text-emerald-900 dark:text-emerald-100 mb-4">Mission & Privacy</h1>
-        <p className="text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto">
+        <h1 id="mission-title" className="text-4xl font-bold text-emerald-900 dark:text-emerald-100 mb-4">Mission & Privacy</h1>
+        <p id="mission-subtitle" className="text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto">
           Transparency and trust are the foundations of our spiritual community. Learn about our mission and how we protect your journey.
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div id="mission-sections-grid" className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {sections.map((section, index) => (
           <motion.div
             key={index}
+            id={`mission-section-${index}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             className="p-8 bg-white dark:bg-zinc-900 rounded-[32px] border border-zinc-100 dark:border-zinc-800 hover:shadow-lg transition-all"
           >
-            <div className={`w-12 h-12 ${section.color} rounded-2xl flex items-center justify-center mb-6`}>
+            <div id={`mission-section-icon-${index}`} className={`w-12 h-12 ${section.color} rounded-2xl flex items-center justify-center mb-6`}>
               <section.icon size={24} />
             </div>
-            <h3 className="text-xl font-bold mb-3 dark:text-white">{section.title}</h3>
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed">
+            <h3 id={`mission-section-title-${index}`} className="text-xl font-bold mb-3 dark:text-white">{section.title}</h3>
+            <p id={`mission-section-content-${index}`} className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed">
               {section.content}
             </p>
           </motion.div>
@@ -91,17 +93,19 @@ export const MissionPage = () => {
       </div>
 
       <motion.div 
+        id="mission-cta-card"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
         className="mt-16 p-8 bg-emerald-600 rounded-[40px] text-white text-center relative overflow-hidden"
       >
         <div className="relative z-10">
-          <h2 className="text-2xl font-bold mb-4">Join Our Mission</h2>
-          <p className="mb-8 opacity-90 max-w-xl mx-auto">
+          <h2 id="mission-cta-title" className="text-2xl font-bold mb-4">Join Our Mission</h2>
+          <p id="mission-cta-description" className="mb-8 opacity-90 max-w-xl mx-auto">
             Help us spread the light of Quranic wisdom. Your support keeps this platform free and accessible for everyone.
           </p>
           <a 
+            id="mission-cta-donate-link"
             href="/donate" 
             className="inline-block bg-white text-emerald-600 px-8 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all shadow-lg"
           >

@@ -70,30 +70,117 @@
     </script>
 
     <style>
-      /* Basic styles for the static navbar and footer in index.html */
-      body { margin: 0; font-family: 'Inter', sans-serif; background-color: #1a1a2e; color: #ffffff; }
-      .static-nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #1a1a2e; border-bottom: 1px solid #c9a84c; }
-      .static-nav a { color: #c9a84c; text-decoration: none; margin-left: 1.5rem; font-weight: bold; font-size: 0.9rem; }
-      .static-nav .logo { font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+      :root {
+        --nav-bg: #1a1a2e;
+        --nav-gold: #c9a84c;
+        --nav-height: 70px;
+      }
+      body { margin: 0; font-family: 'Inter', sans-serif; background-color: #1a1a2e; color: #ffffff; padding-top: var(--nav-height); }
+      
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--nav-height);
+        background: var(--nav-bg);
+        border-bottom: 1px solid var(--nav-gold);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+      }
+      .nav-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo { font-size: 1.3rem; font-weight: bold; color: var(--nav-gold); display: flex; align-items: center; gap: 0.5rem; }
+      .nav-links { display: flex; gap: 1.2rem; align-items: center; }
+      .nav-links a { color: var(--nav-gold); text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: opacity 0.2s; white-space: nowrap; }
+      .nav-links a:hover { opacity: 0.8; }
+      .hamburger { display: none; background: none; border: none; color: var(--nav-gold); font-size: 1.8rem; cursor: pointer; padding: 0; }
+
+      @media (max-width: 1023px) {
+        .hamburger { display: block; }
+        .nav-links {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: var(--nav-height);
+          left: 0;
+          width: 100%;
+          background: var(--nav-bg);
+          border-bottom: 1px solid var(--nav-gold);
+          padding: 0.5rem 0;
+          gap: 0;
+        }
+        .nav-links.active { display: flex; }
+        .nav-links a { padding: 1rem 2rem; border-bottom: 1px solid rgba(201, 168, 76, 0.1); width: 100%; box-sizing: border-box; }
+      }
+
       .static-footer { padding: 2rem; background: #1a1a2e; border-top: 1px solid #c9a84c; text-align: center; font-size: 0.8rem; color: #888; }
       .static-footer a { color: #c9a84c; text-decoration: none; margin: 0 0.5rem; }
       .static-footer .heart { color: #ff4d4d; }
-      #root:not(:empty) ~ .static-nav, #root:not(:empty) ~ .static-footer { display: none; }
+      
+      #root:not(:empty) ~ .navbar, #root:not(:empty) ~ .static-footer { display: none; }
+      #root:not(:empty) { padding-top: 0; }
+      body:has(#root:not(:empty)) { padding-top: 0; }
     </style>
   </head>
   <body>
-    <header class="static-nav">
-      <div class="logo">⭐ Nurul Quran</div>
-      <nav>
-        <a href="/index.html">Home</a>
-        <a href="/about.html">About</a>
-        <a href="/contact.html">Contact</a>
-        <a href="/privacy-policy.html">Privacy</a>
-      </nav>
+    <header class="navbar">
+      <div class="nav-container">
+        <div class="logo">⭐ Nurul Quran</div>
+        <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+        <nav class="nav-links" id="nav-links">
+          <a href="/index.html">Home</a>
+          <a href="/quran">Quran</a>
+          <a href="/tafseer">Tafseer</a>
+          <a href="/hadith">Hadith</a>
+          <a href="/azkar">Azkar</a>
+          <a href="/tasawwuf">Tasawwuf</a>
+          <a href="#" id="static-ai-chat">AI Chat</a>
+          <a href="/finance/halal-stocks">Halal Stocks</a>
+          <a href="/community/qa">Community</a>
+          <a href="/about.html">About</a>
+          <a href="/contact.html">Contact</a>
+          <a href="/privacy-policy.html">Privacy</a>
+          <a href="/profile">Bookmarks</a>
+        </nav>
+      </div>
     </header>
 
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <script>
+      // Hamburger Menu Toggle
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('nav-links');
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          navLinks.classList.toggle('active');
+        });
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+          });
+        });
+        // AI Chat handler
+        const aiChat = document.getElementById('static-ai-chat');
+        if (aiChat) {
+          aiChat.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.dispatchEvent(new CustomEvent('open-ai-chat'));
+          });
+        }
+      }
+    </script>
 
     <footer class="static-footer">
       <p>&copy; 2026 Nurul Quran. All rights reserved.</p>

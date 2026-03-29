@@ -85,15 +85,16 @@ export const AdminAnonymousPage: React.FC = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-zinc-50 dark:bg-zinc-950">
-        <div className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-2xl max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-emerald-900/20">
+      <div id="admin-login-container" className="min-h-screen flex items-center justify-center p-4 bg-zinc-50 dark:bg-zinc-950">
+        <div id="admin-login-card" className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-2xl max-w-md w-full text-center">
+          <div id="admin-login-icon" className="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-emerald-900/20">
             <Lock size={32} />
           </div>
-          <h1 className="text-2xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">Admin Access</h1>
-          <p className="text-zinc-500 dark:text-zinc-400 mb-8">Enter the admin password to manage anonymous questions.</p>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <h1 id="admin-login-title" className="text-2xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">Admin Access</h1>
+          <p id="admin-login-subtitle" className="text-zinc-500 dark:text-zinc-400 mb-8">Enter the admin password to manage anonymous questions.</p>
+          <form id="admin-login-form" onSubmit={handleLogin} className="space-y-4">
             <input
+              id="admin-password-input"
               type="password"
               placeholder="Admin Password"
               className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all text-center font-bold"
@@ -101,6 +102,7 @@ export const AdminAnonymousPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <button
+              id="admin-login-submit-btn"
               type="submit"
               className="w-full px-6 py-3 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20"
             >
@@ -113,16 +115,17 @@ export const AdminAnonymousPage: React.FC = () => {
   }
 
   return (
-    <div className="p-4 md:p-8 max-w-6xl mx-auto pb-32 md:pb-8 animate-fade-up">
-      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">Manage Anonymous Questions</h1>
-          <p className="text-zinc-500 dark:text-zinc-400">Review and answer sensitive community questions.</p>
+    <div id="admin-dashboard-container" className="p-4 md:p-8 max-w-6xl mx-auto pb-32 md:pb-8 animate-fade-up">
+      <div id="admin-dashboard-header" className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div id="admin-dashboard-title-container">
+          <h1 id="admin-dashboard-title" className="text-3xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">Manage Anonymous Questions</h1>
+          <p id="admin-dashboard-subtitle" className="text-zinc-500 dark:text-zinc-400">Review and answer sensitive community questions.</p>
         </div>
-        <div className="flex bg-zinc-100 dark:bg-zinc-800 p-1 rounded-2xl">
+        <div id="admin-dashboard-tabs" className="flex bg-zinc-100 dark:bg-zinc-800 p-1 rounded-2xl">
           {(['pending', 'answered'] as const).map((tab) => (
             <button
               key={tab}
+              id={`admin-tab-${tab}`}
               onClick={() => setActiveTab(tab)}
               className={`px-6 py-2 rounded-xl text-sm font-bold transition-all capitalize ${
                 activeTab === tab
@@ -136,27 +139,29 @@ export const AdminAnonymousPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div id="admin-questions-list" className="space-y-6">
         {loading ? (
-          <div className="p-12 text-center text-zinc-500">Loading questions...</div>
+          <div id="admin-loading-indicator" className="p-12 text-center text-zinc-500">Loading questions...</div>
         ) : questions.length > 0 ? (
           questions.map((q) => (
             <motion.div
               key={q.id}
+              id={`admin-question-card-${q.id}`}
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               className="bg-white dark:bg-zinc-900 rounded-[32px] border border-zinc-100 dark:border-zinc-800 p-6 md:p-8 shadow-sm"
             >
-              <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-500 text-[10px] font-bold rounded-full uppercase tracking-wider">
+              <div id={`admin-question-header-${q.id}`} className="flex items-center justify-between mb-4">
+                <span id={`admin-question-category-${q.id}`} className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-500 text-[10px] font-bold rounded-full uppercase tracking-wider">
                   {q.category}
                 </span>
-                <div className="flex items-center gap-4">
-                  <span className="text-[10px] text-zinc-400 font-medium flex items-center gap-1">
+                <div id={`admin-question-meta-${q.id}`} className="flex items-center gap-4">
+                  <span id={`admin-question-timestamp-${q.id}`} className="text-[10px] text-zinc-400 font-medium flex items-center gap-1">
                     <Clock size={12} />
                     {new Date(q.timestamp).toLocaleString()}
                   </span>
                   <button
+                    id={`admin-question-delete-btn-${q.id}`}
                     onClick={() => handleDelete(q.id)}
                     className="p-2 text-zinc-300 hover:text-rose-500 transition-all"
                     title="Delete"
@@ -165,13 +170,14 @@ export const AdminAnonymousPage: React.FC = () => {
                   </button>
                 </div>
               </div>
-              <p className="text-lg font-bold text-emerald-900 dark:text-emerald-100 mb-6 italic">
+              <p id={`admin-question-body-${q.id}`} className="text-lg font-bold text-emerald-900 dark:text-emerald-100 mb-6 italic">
                 "{q.body}"
               </p>
 
               {activeTab === 'pending' ? (
-                <div className="space-y-4">
+                <div id={`admin-question-answer-section-${q.id}`} className="space-y-4">
                   <textarea
+                    id={`admin-question-answer-input-${q.id}`}
                     rows={4}
                     placeholder="Write your answer here..."
                     className="w-full px-4 py-4 bg-zinc-50 dark:bg-zinc-800 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all resize-none text-sm"
@@ -179,6 +185,7 @@ export const AdminAnonymousPage: React.FC = () => {
                     onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
                   />
                   <button
+                    id={`admin-question-post-answer-btn-${q.id}`}
                     onClick={() => handleAnswer(q.id)}
                     className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20"
                   >
@@ -187,12 +194,12 @@ export const AdminAnonymousPage: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="p-6 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/20">
-                  <div className="flex items-center gap-2 mb-2 text-emerald-600 font-bold text-xs uppercase tracking-widest">
+                <div id={`admin-question-answer-container-${q.id}`} className="p-6 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/20">
+                  <div id={`admin-question-answered-badge-${q.id}`} className="flex items-center gap-2 mb-2 text-emerald-600 font-bold text-xs uppercase tracking-widest">
                     <CheckCircle2 size={14} />
                     Answered
                   </div>
-                  <p className="text-sm text-emerald-900 dark:text-emerald-100 leading-relaxed whitespace-pre-wrap">
+                  <p id={`admin-question-answer-text-${q.id}`} className="text-sm text-emerald-900 dark:text-emerald-100 leading-relaxed whitespace-pre-wrap">
                     {q.answer}
                   </p>
                 </div>
@@ -200,7 +207,7 @@ export const AdminAnonymousPage: React.FC = () => {
             </motion.div>
           ))
         ) : (
-          <div className="p-12 text-center text-zinc-500 italic bg-zinc-50 dark:bg-zinc-800/30 rounded-[32px] border border-dashed border-zinc-200 dark:border-zinc-700">
+          <div id="admin-no-questions-indicator" className="p-12 text-center text-zinc-500 italic bg-zinc-50 dark:bg-zinc-800/30 rounded-[32px] border border-dashed border-zinc-200 dark:border-zinc-700">
             No {activeTab} questions found.
           </div>
         )}

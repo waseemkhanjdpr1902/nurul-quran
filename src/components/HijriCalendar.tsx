@@ -74,15 +74,16 @@ export const HijriCalendar = () => {
 
   return (
     <motion.div 
+      id="hijri-calendar-container"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className="flex items-center justify-center gap-4 px-8 py-4 bg-emerald-800/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gold/20 mx-auto w-fit mb-8 animate-fade-up"
     >
-      <div className="flex items-center gap-2">
-        <span className="font-bold text-lg md:text-xl text-gold">{hijri.formatted}</span>
+      <div id="hijri-date-section" className="flex items-center gap-2">
+        <span id="hijri-date-text" className="font-bold text-lg md:text-xl text-gold">{hijri.formatted}</span>
       </div>
-      <div className="w-px h-6 bg-white/20" />
-      <span className="text-base md:text-lg text-white font-medium">{gregorianDate}</span>
+      <div id="hijri-calendar-divider" className="w-px h-6 bg-white/20" />
+      <span id="gregorian-date-text" className="text-base md:text-lg text-white font-medium">{gregorianDate}</span>
     </motion.div>
   );
 };

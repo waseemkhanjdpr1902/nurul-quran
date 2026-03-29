@@ -18,6 +18,7 @@ export const TasawwufPage = () => {
           {TASAWWUF_ARTICLES.map((article) => (
             <button
               key={article.id}
+              id={`tasawwuf-article-btn-${article.id}`}
               onClick={() => setSelectedArticle(article)}
               className={`w-full p-4 rounded-2xl text-left transition-all border ${
                 selectedArticle.id === article.id

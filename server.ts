@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
 import cors from "cors";
 import Razorpay from "razorpay";
@@ -48,8 +47,26 @@ async function startServer() {
       }
     });
 
+    // Razorpay Payment Verification
+    app.post("/api/payments/verify", async (req, res) => {
+      const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+      const secret = process.env.RAZORPAY_KEY_SECRET || "placeholder_secret";
+      
+      const crypto = await import("crypto");
+      const hmac = crypto.createHmac("sha256", secret);
+      hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+      const generated_signature = hmac.digest("hex");
+
+      if (generated_signature === razorpay_signature) {
+        res.json({ status: "ok", message: "Payment verified successfully" });
+      } else {
+        res.status(400).json({ error: "Invalid signature" });
+      }
+    });
+
     // Vite Integration
     if (!isProd) {
+      const { createServer: createViteServer } = await import("vite");
       const vite = await createViteServer({
         server: { middlewareMode: true },
         appType: "spa",
@@ -79,12 +96,17 @@ async function startServer() {
       console.log("Serving static files from dist");
     }
 
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(`Server running at http://0.0.0.0:${PORT}`);
-    });
+    if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+      app.listen(PORT, "0.0.0.0", () => {
+        console.log(`Server running at http://0.0.0.0:${PORT}`);
+      });
+    }
+
+    return app;
   } catch (error) {
     console.error("Failed to start server:", error);
   }
 }
 
-startServer();
+const appPromise = startServer();
+export default appPromise;

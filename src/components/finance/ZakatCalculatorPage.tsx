@@ -34,32 +34,33 @@ export const ZakatCalculatorPage: React.FC = () => {
   ];
 
   return (
-    <div className="p-4 md:p-8 max-w-6xl mx-auto pb-32 md:pb-8 animate-fade-up">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">Zakat Calculator</h1>
-        <p className="text-zinc-500 dark:text-zinc-400">Calculate your annual Zakat obligation (2.5% of zakatable wealth).</p>
+    <div id="zakat-calculator-page" className="p-4 md:p-8 max-w-6xl mx-auto pb-32 md:pb-8 animate-fade-up">
+      <div id="zakat-header" className="mb-8">
+        <h1 id="zakat-title" className="text-3xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">Zakat Calculator</h1>
+        <p id="zakat-subtitle" className="text-zinc-500 dark:text-zinc-400">Calculate your annual Zakat obligation (2.5% of zakatable wealth).</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-emerald-600">
+      <div id="zakat-calculator-grid" className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div id="zakat-calculator-main" className="lg:col-span-2 space-y-6">
+          <div id="zakat-asset-card" className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm">
+            <div id="zakat-asset-header" className="flex items-center gap-3 mb-8">
+              <div id="zakat-asset-icon" className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-emerald-600">
                 <Calculator size={24} />
               </div>
-              <h2 className="text-xl font-bold text-emerald-900 dark:text-emerald-100">Asset Breakdown</h2>
+              <h2 id="zakat-asset-title" className="text-xl font-bold text-emerald-900 dark:text-emerald-100">Asset Breakdown</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="zakat-asset-inputs" className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {inputFields.map((field, i) => (
-                <div key={i} className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-widest">
+                <div key={i} id={`zakat-input-container-${field.label.toLowerCase().replace(/\s+/g, '-')}`} className="space-y-2">
+                  <label id={`zakat-label-${field.label.toLowerCase().replace(/\s+/g, '-')}`} className="flex items-center gap-2 text-sm font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-widest">
                     <field.icon size={16} className="text-emerald-600" />
                     {field.label}
                   </label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 font-bold">₹</span>
                     <input
+                      id={`zakat-input-${field.label.toLowerCase().replace(/\s+/g, '-')}`}
                       type="number"
                       value={field.value || ''}
                       onChange={(e) => field.setter(Number(e.target.value))}
@@ -67,31 +68,32 @@ export const ZakatCalculatorPage: React.FC = () => {
                       placeholder="0"
                     />
                   </div>
-                  <p className="text-[10px] text-zinc-400 italic">{field.desc}</p>
+                  <p id={`zakat-desc-${field.label.toLowerCase().replace(/\s+/g, '-')}`} className="text-[10px] text-zinc-400 italic">{field.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-emerald-50 dark:bg-emerald-900/10 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-900/20 flex gap-4">
-            <Info className="text-emerald-600 shrink-0" size={24} />
-            <p className="text-sm text-emerald-800 dark:text-emerald-200 leading-relaxed">
+          <div id="zakat-info-card" className="bg-emerald-50 dark:bg-emerald-900/10 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-900/20 flex gap-4">
+            <Info id="zakat-info-icon" className="text-emerald-600 shrink-0" size={24} />
+            <p id="zakat-info-text" className="text-sm text-emerald-800 dark:text-emerald-200 leading-relaxed">
               <span className="font-bold">Note:</span> Zakat is calculated on wealth held for one full lunar year (Hawl). The Nisab threshold is the minimum amount of wealth required to be held for a year before Zakat becomes obligatory.
             </p>
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm sticky top-8">
-            <h3 className="text-xl font-bold mb-6 text-emerald-900 dark:text-emerald-100">Summary</h3>
+        <div id="zakat-calculator-sidebar" className="space-y-6">
+          <div id="zakat-summary-card" className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-sm sticky top-8">
+            <h3 id="zakat-summary-title" className="text-xl font-bold mb-6 text-emerald-900 dark:text-emerald-100">Summary</h3>
             
-            <div className="space-y-4 mb-8">
-              <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Nisab Threshold</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-zinc-400">Gold Rate: ₹</span>
+            <div id="zakat-summary-stats" className="space-y-4 mb-8">
+              <div id="zakat-nisab-threshold-card" className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                <div id="zakat-nisab-threshold-header" className="flex justify-between items-center mb-2">
+                  <span id="zakat-nisab-threshold-label" className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Nisab Threshold</span>
+                  <div id="zakat-nisab-rate-container" className="flex items-center gap-2">
+                    <span id="zakat-nisab-rate-label" className="text-[10px] text-zinc-400">Gold Rate: ₹</span>
                     <input 
+                      id="zakat-nisab-rate-input"
                       type="number" 
                       value={nisabRate} 
                       onChange={(e) => setNisabRate(Number(e.target.value))}
@@ -99,18 +101,19 @@ export const ZakatCalculatorPage: React.FC = () => {
                     />
                   </div>
                 </div>
-                <p className="text-xl font-bold text-emerald-900 dark:text-emerald-100">{formatCurrency(nisabThreshold)}</p>
-                <p className="text-[10px] text-zinc-400 mt-1">(87.48g Gold equivalent)</p>
+                <p id="zakat-nisab-threshold-display" className="text-xl font-bold text-emerald-900 dark:text-emerald-100">{formatCurrency(nisabThreshold)}</p>
+                <p id="zakat-nisab-threshold-subtext" className="text-[10px] text-zinc-400 mt-1">(87.48g Gold equivalent)</p>
               </div>
 
-              <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-                <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Total Zakatable Wealth</span>
-                <p className="text-xl font-bold text-emerald-900 dark:text-emerald-100">{formatCurrency(totalWealth)}</p>
+              <div id="zakat-total-wealth-card" className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                <span id="zakat-total-wealth-label" className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Total Zakatable Wealth</span>
+                <p id="zakat-total-wealth-display" className="text-xl font-bold text-emerald-900 dark:text-emerald-100">{formatCurrency(totalWealth)}</p>
               </div>
             </div>
 
             <motion.div 
               key={isZakatDue ? 'due' : 'not-due'}
+              id="zakat-result-display"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className={`p-6 rounded-2xl text-center border-2 ${
@@ -121,25 +124,25 @@ export const ZakatCalculatorPage: React.FC = () => {
             >
               {isZakatDue ? (
                 <>
-                  <p className="text-xs font-bold uppercase tracking-widest mb-2 opacity-80">Zakat Due</p>
-                  <p className="text-4xl font-bold mb-2">{formatCurrency(zakatAmount)}</p>
-                  <p className="text-[10px] opacity-80">2.5% of your total zakatable wealth</p>
+                  <p id="zakat-result-label" className="text-xs font-bold uppercase tracking-widest mb-2 opacity-80">Zakat Due</p>
+                  <p id="zakat-amount-due" className="text-4xl font-bold mb-2">{formatCurrency(zakatAmount)}</p>
+                  <p id="zakat-result-subtext" className="text-[10px] opacity-80">2.5% of your total zakatable wealth</p>
                 </>
               ) : (
                 <>
-                  <p className="text-xs font-bold uppercase tracking-widest mb-2">No Zakat Due</p>
-                  <p className="text-sm leading-relaxed">Your wealth is below the Nisab threshold of {formatCurrency(nisabThreshold)}.</p>
+                  <p id="zakat-result-label" className="text-xs font-bold uppercase tracking-widest mb-2">No Zakat Due</p>
+                  <p id="zakat-result-subtext" className="text-sm leading-relaxed">Your wealth is below the Nisab threshold of {formatCurrency(nisabThreshold)}.</p>
                 </>
               )}
             </motion.div>
 
-            <div className="mt-8 pt-8 border-t border-zinc-100 dark:border-zinc-800">
-              <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Breakdown</h4>
-              <div className="space-y-2">
+            <div id="zakat-breakdown-section" className="mt-8 pt-8 border-t border-zinc-100 dark:border-zinc-800">
+              <h4 id="zakat-breakdown-title" className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Breakdown</h4>
+              <div id="zakat-breakdown-list" className="space-y-2">
                 {inputFields.map((field, i) => (
-                  <div key={i} className="flex justify-between text-sm">
-                    <span className="text-zinc-500">{field.label}</span>
-                    <span className="font-bold text-emerald-900 dark:text-emerald-100">{formatCurrency(field.value)}</span>
+                  <div key={i} id={`zakat-breakdown-item-${field.label.toLowerCase().replace(/\s+/g, '-')}`} className="flex justify-between text-sm">
+                    <span id={`zakat-breakdown-label-${field.label.toLowerCase().replace(/\s+/g, '-')}`} className="text-zinc-500">{field.label}</span>
+                    <span id={`zakat-breakdown-value-${field.label.toLowerCase().replace(/\s+/g, '-')}`} className="font-bold text-emerald-900 dark:text-emerald-100">{formatCurrency(field.value)}</span>
                   </div>
                 ))}
               </div>

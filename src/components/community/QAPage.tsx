@@ -115,6 +115,7 @@ export const QAPage: React.FC = () => {
           <p className="text-zinc-500 dark:text-zinc-400">Ask and answer questions about Islam and daily life.</p>
         </div>
         <button
+          id="qa-ask-question-trigger"
           onClick={() => setIsModalOpen(true)}
           className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20"
         >
@@ -135,6 +136,7 @@ export const QAPage: React.FC = () => {
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" size={20} />
             <input
+              id="qa-search-input"
               type="text"
               placeholder="Search questions..."
               className="w-full pl-12 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all"
@@ -147,6 +149,7 @@ export const QAPage: React.FC = () => {
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
+                id={`qa-filter-${cat.toLowerCase().replace(/\s+/g, '-')}`}
                 onClick={() => setActiveFilter(cat)}
                 className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
                   activeFilter === cat
@@ -167,6 +170,7 @@ export const QAPage: React.FC = () => {
             filteredQuestions.map((q) => (
               <div 
                 key={q.id} 
+                id={`qa-question-${q.id}`}
                 onClick={() => navigate(`/community/qa/${q.id}`)}
                 className="p-6 hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-all cursor-pointer group"
               >
@@ -193,6 +197,7 @@ export const QAPage: React.FC = () => {
                       {q.answer_count}
                     </div>
                     <button
+                      id={`qa-upvote-${q.id}`}
                       onClick={(e) => handleUpvote(e, q.id)}
                       className="flex items-center gap-1 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 rounded-lg text-xs font-bold hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-all"
                     >
@@ -200,6 +205,7 @@ export const QAPage: React.FC = () => {
                       {q.upvotes}
                     </button>
                     <button
+                      id={`qa-report-${q.id}`}
                       onClick={(e) => handleReport(e, q.id)}
                       className="p-1.5 text-zinc-300 hover:text-rose-500 transition-all"
                       title="Report"
@@ -227,12 +233,14 @@ export const QAPage: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            id="qa-modal-overlay"
             className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-emerald-950/40 backdrop-blur-md"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              id="qa-modal-content"
               className="bg-white dark:bg-zinc-900 rounded-[32px] p-8 max-w-lg w-full shadow-2xl border border-emerald-100 dark:border-emerald-900/30"
             >
               <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-100 mb-6">Ask a Question</h2>
@@ -240,6 +248,7 @@ export const QAPage: React.FC = () => {
                 <div>
                   <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Title</label>
                   <input
+                    id="qa-new-title"
                     type="text"
                     required
                     placeholder="e.g. How to improve concentration in Salah?"
@@ -251,6 +260,7 @@ export const QAPage: React.FC = () => {
                 <div>
                   <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Category</label>
                   <select
+                    id="qa-new-category"
                     className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all"
                     value={newQuestion.category}
                     onChange={(e) => setNewQuestion({ ...newQuestion, category: e.target.value })}
@@ -263,6 +273,7 @@ export const QAPage: React.FC = () => {
                 <div>
                   <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Details</label>
                   <textarea
+                    id="qa-new-body"
                     required
                     rows={4}
                     placeholder="Provide more context for your question..."
@@ -273,6 +284,7 @@ export const QAPage: React.FC = () => {
                 </div>
                 <div className="flex gap-4 pt-4">
                   <button
+                    id="qa-modal-cancel"
                     type="button"
                     onClick={() => setIsModalOpen(false)}
                     className="flex-1 px-6 py-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-500 font-bold rounded-2xl hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all"
@@ -280,6 +292,7 @@ export const QAPage: React.FC = () => {
                     Cancel
                   </button>
                   <button
+                    id="qa-modal-submit"
                     type="submit"
                     className="flex-1 px-6 py-3 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20"
                   >

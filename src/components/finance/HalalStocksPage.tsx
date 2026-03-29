@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, CheckCircle2, XCircle, AlertCircle, Info, TrendingUp, Star, Trash2, Loader2, ExternalLink, ChevronRight, X, Lock, Users, Calculator, Bell, FileText, PieChart, ShieldCheck, Zap, Wrench, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useAuth } from '../../contexts/AuthContext';
+import { db, doc, setDoc, getDoc } from '../../lib/firebase';
 
 const FMP_API_KEY = import.meta.env.VITE_FMP_API_KEY;
 const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID;
@@ -63,14 +65,15 @@ const SubscriptionModal: React.FC<{ isOpen: boolean; onClose: () => void; onSubs
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div id="subscription-modal-overlay" className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
       <motion.div 
+        id="subscription-modal-content"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-zinc-900 border border-zinc-800 rounded-[32px] max-w-2xl w-full overflow-hidden shadow-2xl"
       >
         <div className="relative p-8 md:p-12">
-          <button onClick={onClose} className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors">
+          <button id="sub-modal-close" onClick={onClose} className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors">
             <X size={24} />
           </button>
 
@@ -130,6 +133,7 @@ const SubscriptionModal: React.FC<{ isOpen: boolean; onClose: () => void; onSubs
 
           <div className="flex flex-col gap-3">
             <button 
+              id="sub-modal-pay"
               onClick={onPayment}
               disabled={isProcessing}
               className="w-full py-5 bg-white text-black font-bold rounded-2xl hover:bg-zinc-200 transition-all text-lg shadow-xl flex items-center justify-center gap-2 disabled:opacity-50"
@@ -147,6 +151,7 @@ const SubscriptionModal: React.FC<{ isOpen: boolean; onClose: () => void; onSubs
               )}
             </button>
             <button 
+              id="sub-modal-trial"
               onClick={onSubscribe}
               className="w-full py-3 text-zinc-500 hover:text-white transition-all text-sm font-medium"
             >
@@ -265,6 +270,7 @@ const StockCard: React.FC<{
   return (
     <motion.div
       ref={ref}
+      id={`stock-card-${stock.symbol}`}
       whileHover={{ y: -4 }}
       onMouseEnter={onHover}
       onClick={onClick}
@@ -327,6 +333,7 @@ export const HalalStocksPage: React.FC = () => {
   const [visibleSymbols, setVisibleSymbols] = useState<Set<string>>(new Set());
   const [prices, setPrices] = useState<Record<string, number>>({});
 
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -341,9 +348,28 @@ export const HalalStocksPage: React.FC = () => {
     const savedCount = localStorage.getItem('halal_search_count');
     if (savedCount) setSearchCount(parseInt(savedCount));
     
-    const savedSub = localStorage.getItem('halal_is_subscribed');
-    if (savedSub) setIsSubscribed(JSON.parse(savedSub));
-  }, []);
+    const checkSubscription = async () => {
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists() && userDoc.data().is_pro) {
+            setIsSubscribed(true);
+            localStorage.setItem('halal_is_subscribed', JSON.stringify(true));
+          } else {
+            const savedSub = localStorage.getItem('halal_is_subscribed');
+            if (savedSub) setIsSubscribed(JSON.parse(savedSub));
+          }
+        } catch (err) {
+          console.error("Error checking subscription:", err);
+        }
+      } else {
+        const savedSub = localStorage.getItem('halal_is_subscribed');
+        if (savedSub) setIsSubscribed(JSON.parse(savedSub));
+      }
+    };
+    
+    checkSubscription();
+  }, [user]);
 
   const fetchPricesBatch = useCallback(async (symbols: string[]) => {
     if (symbols.length === 0 || apiUsage > 200) return;
@@ -400,6 +426,11 @@ export const HalalStocksPage: React.FC = () => {
       return;
     }
 
+    if (!user) {
+      alert("Please sign in to subscribe.");
+      return;
+    }
+
     setIsProcessingPayment(true);
     try {
       const response = await fetch("/api/payments/order", {
@@ -421,14 +452,41 @@ export const HalalStocksPage: React.FC = () => {
         name: "Halal Stocks Pro",
         description: "Unlock full Shariah analysis and portfolio tracking",
         order_id: order.id,
-        handler: function (response: any) {
-          console.log("Payment successful:", response);
-          handleSubscribe();
-          alert("Payment successful! You are now a Pro member.");
+        handler: async function (response: any) {
+          try {
+            // Verify payment on server
+            const verifyRes = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyData.status === "ok") {
+              // Save to Firestore
+              await setDoc(doc(db, 'users', user.uid), {
+                is_pro: true,
+                subscription_date: new Date().toISOString(),
+                last_payment_id: response.razorpay_payment_id
+              }, { merge: true });
+
+              handleSubscribe();
+              alert("Payment successful! You are now a Pro member.");
+            } else {
+              alert("Payment verification failed. Please contact support.");
+            }
+          } catch (err) {
+            console.error("Verification error:", err);
+            alert("Error verifying payment. Please contact support.");
+          }
         },
         prefill: {
-          name: "User",
-          email: "user@example.com",
+          name: user.displayName || "User",
+          email: user.email || "",
         },
         theme: {
           color: "#059669",
@@ -764,11 +822,12 @@ export const HalalStocksPage: React.FC = () => {
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">Halal Stock Screener</h1>
-          <p className="text-zinc-500 dark:text-zinc-400">Dynamic Shariah-compliant screening for global and Indian stocks.</p>
+          <h1 id="halal-stocks-title" className="text-3xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">Halal Stock Screener</h1>
+          <p id="halal-stocks-description" className="text-zinc-500 dark:text-zinc-400">Dynamic Shariah-compliant screening for global and Indian stocks.</p>
         </div>
         <div className="flex items-center gap-3">
           <button 
+            id="toggle-sim-pro"
             onClick={toggleSubscription}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
               isSubscribed 
@@ -779,7 +838,7 @@ export const HalalStocksPage: React.FC = () => {
             {isSubscribed ? 'Pro Access Active' : 'Simulate Pro Access'}
           </button>
           {!isSubscribed && (
-            <div className="px-3 py-1 bg-zinc-800 border border-zinc-700 rounded-lg text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+            <div id="free-searches-counter" className="px-3 py-1 bg-zinc-800 border border-zinc-700 rounded-lg text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
               {3 - searchCount} Free Searches Left
             </div>
           )}
@@ -791,6 +850,7 @@ export const HalalStocksPage: React.FC = () => {
         {EXCHANGES.map((ex) => (
           <button
             key={ex.id}
+            id={`exchange-filter-${ex.id}`}
             onClick={() => setSelectedExchange(ex.id)}
             className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold transition-all whitespace-nowrap ${
               selectedExchange === ex.id
@@ -808,6 +868,7 @@ export const HalalStocksPage: React.FC = () => {
       <div className="relative mb-12">
         <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-400" size={20} />
         <input
+          id="stock-search-input"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -818,7 +879,7 @@ export const HalalStocksPage: React.FC = () => {
 
       {/* Curated Stocks Grid */}
       {!selectedStock && !loading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div id="curated-stocks-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {filteredStocks.map((stock) => (
             <StockCard 
               key={stock.symbol} 
@@ -855,6 +916,7 @@ export const HalalStocksPage: React.FC = () => {
                 {recentSearches.map(s => (
                   <button
                     key={s.symbol}
+                    id={`recent-search-${s.symbol.replace(/\./g, '-')}`}
                     onClick={() => fetchStockDetails(s.symbol, s)}
                     className="px-4 py-2 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-xl text-sm font-medium hover:border-emerald-500 transition-all"
                   >
@@ -878,6 +940,7 @@ export const HalalStocksPage: React.FC = () => {
                   .map(([symbol]) => (
                     <button
                       key={symbol}
+                      id={`session-search-${symbol.replace(/\./g, '-')}`}
                       onClick={() => fetchStockDetails(symbol)}
                       className="px-4 py-2 bg-emerald-500/5 border border-emerald-500/20 rounded-xl text-sm font-bold text-emerald-600 hover:bg-emerald-500/10 transition-all"
                     >
@@ -922,7 +985,7 @@ export const HalalStocksPage: React.FC = () => {
       {selectedStock && screening && !loading && (
         <div className="relative">
           {!isSubscribed && (
-            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-white dark:from-zinc-950 via-white/80 dark:via-zinc-950/80 to-transparent z-10 flex flex-col items-center justify-end pb-12 px-4 text-center">
+            <div id="pro-lock-overlay" className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-white dark:from-zinc-950 via-white/80 dark:via-zinc-950/80 to-transparent z-10 flex flex-col items-center justify-end pb-12 px-4 text-center">
               <div className="bg-white dark:bg-zinc-900 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 shadow-2xl max-w-md w-full">
                 <Lock className="text-emerald-500 mx-auto mb-4" size={32} />
                 <h3 className="text-xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">Unlock Full Analysis</h3>
@@ -930,6 +993,7 @@ export const HalalStocksPage: React.FC = () => {
                   Get detailed debt ratios, interest income breakdowns, and full Shariah compliance reports for 500+ stocks.
                 </p>
                 <button 
+                  id="pro-lock-subscribe-btn"
                   onClick={() => setShowSubModal(true)}
                   className="w-full py-4 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20"
                 >
@@ -942,6 +1006,7 @@ export const HalalStocksPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            id="stock-result-card"
             className={`bg-white dark:bg-zinc-900 rounded-[32px] border border-emerald-100 dark:border-emerald-900/30 overflow-hidden shadow-xl mb-12 ${!isSubscribed ? 'max-h-[600px] overflow-hidden' : ''}`}
           >
             <div className="p-8 md:p-12">
@@ -1017,6 +1082,7 @@ export const HalalStocksPage: React.FC = () => {
                 </div>
                 <div className="space-y-4">
                   <button
+                    id="stock-add-watchlist"
                     onClick={saveToWatchlist}
                     className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20"
                   >
@@ -1024,6 +1090,7 @@ export const HalalStocksPage: React.FC = () => {
                     Save to Watchlist
                   </button>
                   <a 
+                    id="stock-view-yahoo"
                     href={`https://finance.yahoo.com/quote/${selectedStock.symbol}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -1036,21 +1103,21 @@ export const HalalStocksPage: React.FC = () => {
               </div>
 
               <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 ${!isSubscribed ? 'blur-md select-none' : ''}`}>
-                <div className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                <div id="stat-debt-ratio" className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
                   <div className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Debt Ratio</div>
                   <div className={`text-2xl font-bold ${screening.debtRatio > 0.33 ? 'text-rose-600' : 'text-emerald-600'}`}>
                     {(screening.debtRatio * 100).toFixed(2)}%
                   </div>
                   <div className="text-[10px] text-zinc-400 mt-1">Threshold: 33%</div>
                 </div>
-                <div className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                <div id="stat-interest-income" className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
                   <div className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Interest Income</div>
                   <div className={`text-2xl font-bold ${screening.interestIncomeRatio > 0.05 ? 'text-rose-600' : 'text-emerald-600'}`}>
                     {(screening.interestIncomeRatio * 100).toFixed(2)}%
                   </div>
                   <div className="text-[10px] text-zinc-400 mt-1">Threshold: 5%</div>
                 </div>
-                <div className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                <div id="stat-haram-industry" className="p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-100 dark:border-zinc-800">
                   <div className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Haram Industry</div>
                   <div className={`text-2xl font-bold ${screening.isHaramIndustry ? 'text-rose-600' : 'text-emerald-600'}`}>
                     {screening.isHaramIndustry ? 'Yes' : 'No'}
@@ -1071,6 +1138,7 @@ export const HalalStocksPage: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div 
+            id="tool-zakat-calc"
             onClick={() => navigate('/finance/zakat-calculator')}
             className="p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-[24px] hover:border-emerald-500 transition-all cursor-pointer group"
           >
@@ -1095,6 +1163,7 @@ export const HalalStocksPage: React.FC = () => {
             {watchlist.map((stock) => (
               <div
                 key={stock.symbol}
+                id={`watchlist-item-${stock.symbol.replace(/\./g, '-')}`}
                 className="bg-white dark:bg-zinc-900 p-6 rounded-[24px] border border-zinc-100 dark:border-zinc-800 flex items-center justify-between group"
               >
                 <div className="cursor-pointer flex-1" onClick={() => fetchStockDetails(stock.symbol)}>
@@ -1111,6 +1180,7 @@ export const HalalStocksPage: React.FC = () => {
                   )}
                 </div>
                 <button
+                  id={`watchlist-remove-${stock.symbol.replace(/\./g, '-')}`}
                   onClick={() => removeFromWatchlist(stock.symbol)}
                   className="p-2 text-zinc-300 hover:text-rose-500 transition-all opacity-0 group-hover:opacity-100"
                 >
@@ -1123,7 +1193,7 @@ export const HalalStocksPage: React.FC = () => {
       )}
 
       {/* Disclaimer */}
-      <div className="mt-12 p-8 bg-zinc-900 text-white rounded-[40px] relative overflow-hidden">
+      <div id="disclaimer-section" className="mt-12 p-8 bg-zinc-900 text-white rounded-[40px] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -mr-32 -mt-32" />
         <div className="relative flex gap-6">
           <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center shrink-0">

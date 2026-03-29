@@ -119,10 +119,11 @@ export const AIChatGuide = () => {
             <div className="bg-emerald-600 p-4 flex items-center justify-between text-white">
               <div className="flex items-center gap-2">
                 <Bot size={20} />
-                <span className="font-medium">Nurul Quran AI Guide</span>
+                <span id="ai-chat-header-title" className="font-medium">Nurul Quran AI Guide</span>
               </div>
               <div className="flex items-center gap-2">
                 <select 
+                  id="ai-chat-language-select"
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
                   className="bg-emerald-700 text-xs border-none rounded-lg px-2 py-1 outline-none text-white cursor-pointer"
@@ -132,6 +133,7 @@ export const AIChatGuide = () => {
                   ))}
                 </select>
                 <button 
+                  id="ai-chat-clear-btn"
                   onClick={() => {
                     setMessages([{ role: 'model', text: 'Assalamu Alaikum. How can I help you today?' }]);
                     setChatId(null);
@@ -141,6 +143,7 @@ export const AIChatGuide = () => {
                   Clear
                 </button>
                 <button 
+                  id="ai-chat-close-header-btn"
                   onClick={() => setIsOpen(false)} 
                   className="hover:bg-emerald-700 p-1 rounded-full transition-colors flex items-center gap-1 group"
                 >
@@ -151,9 +154,9 @@ export const AIChatGuide = () => {
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-emerald-50/30 dark:bg-zinc-950">
+            <div id="ai-chat-messages-container" ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-emerald-50/30 dark:bg-zinc-950">
               {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div key={i} id={`ai-chat-message-${i}`} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${
                     msg.role === 'user' 
                       ? 'bg-emerald-600 text-white rounded-tr-none' 
@@ -168,7 +171,7 @@ export const AIChatGuide = () => {
                 </div>
               ))}
               {isLoading && (
-                <div className="flex justify-start">
+                <div id="ai-chat-loading-indicator" className="flex justify-start">
                   <div className="bg-white dark:bg-zinc-800 border border-emerald-100 dark:border-emerald-900/30 p-3 rounded-2xl rounded-tl-none animate-pulse">
                     <div className="flex gap-1">
                       <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" />
@@ -184,6 +187,7 @@ export const AIChatGuide = () => {
             <div className="p-4 border-t border-emerald-100 dark:border-emerald-900/30 bg-white dark:bg-zinc-900 space-y-3">
               <div className="flex gap-2">
                 <input
+                  id="ai-chat-input-field"
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -192,6 +196,7 @@ export const AIChatGuide = () => {
                   className="flex-1 bg-emerald-50 dark:bg-zinc-800 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                 />
                 <button
+                  id="ai-chat-send-btn"
                   onClick={handleSend}
                   disabled={isLoading}
                   className="bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 transition-colors"
@@ -200,6 +205,7 @@ export const AIChatGuide = () => {
                 </button>
               </div>
               <button 
+                id="ai-chat-close-footer-btn"
                 onClick={() => setIsOpen(false)}
                 className="w-full py-2 text-xs text-zinc-400 hover:text-emerald-600 transition-colors font-medium border-t border-zinc-50 dark:border-zinc-800 pt-2"
               >
@@ -211,6 +217,7 @@ export const AIChatGuide = () => {
       </AnimatePresence>
 
       <button
+        id="ai-chat-toggle-btn"
         onClick={() => setIsOpen(!isOpen)}
         className="bg-emerald-600 text-white p-4 rounded-full shadow-lg hover:bg-emerald-700 transition-all hover:scale-110 active:scale-95"
       >

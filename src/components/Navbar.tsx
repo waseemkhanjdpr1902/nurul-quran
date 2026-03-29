@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, BookOpen, Quote, Compass, Heart, HeartHandshake, User, LogIn, LogOut, Star, Shield, IndianRupee, Calculator, TrendingUp, Book, Users, MessageSquare, HelpCircle, Lock, Mail } from 'lucide-react';
+import { Home, BookOpen, Quote, Compass, Heart, HeartHandshake, User, LogIn, LogOut, Star, Shield, IndianRupee, Calculator, TrendingUp, Book, Users, MessageSquare, HelpCircle, Lock, Mail, Bot, ChevronDown, LayoutDashboard, Menu, X, Settings } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthModal } from './AuthModal';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ export const Navbar = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -26,14 +27,14 @@ export const Navbar = () => {
   ];
 
   const financeNavItems = [
-    { to: '#ai-chat', icon: MessageSquare, label: 'AI Chat', isAction: true },
+    { to: '#ai-chat', icon: Bot, label: 'AI Chat', isAction: true },
     { to: '/finance/halal-stocks', icon: TrendingUp, label: 'Halal Stocks' },
     { to: '/finance/zakat-calculator', icon: Calculator, label: 'Zakat Calc' },
     { to: '/finance/investment-guide', icon: Book, label: 'Invest Guide' },
   ];
 
   const communityNavItems = [
-    { to: '/community/qa', icon: HelpCircle, label: 'Q&A Board' },
+    { to: '/community/qa', icon: MessageSquare, label: 'Q&A Board' },
     { to: '/community/anonymous', icon: Lock, label: 'Anonymous' },
     { to: '/community/groups', icon: Users, label: 'Groups' },
   ];
@@ -43,206 +44,287 @@ export const Navbar = () => {
     { to: '/contact.html', icon: Mail, label: 'Contact' },
     { to: '/privacy-policy.html', icon: Lock, label: 'Privacy' },
     { to: '/donate', icon: HeartHandshake, label: 'Donate' },
-    { to: '/profile', icon: User, label: 'Profile' },
   ];
+
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const navLinkClass = ({ isActive }: { isActive: boolean }) => `
+    flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 whitespace-nowrap
+    ${isActive 
+      ? 'text-emerald-600 dark:text-emerald-400 font-bold' 
+      : 'text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400'}
+  `;
+
+  const Dropdown = ({ label, items, id }: { label: string, items: any[], id: string }) => (
+    <div 
+      className="relative group"
+      onMouseEnter={() => setActiveDropdown(id)}
+      onMouseLeave={() => setActiveDropdown(null)}
+    >
+      <button 
+        id={`dropdown-trigger-${id}`}
+        className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 transition-colors"
+      >
+        {label}
+        <ChevronDown size={14} className={`transition-transform duration-200 ${activeDropdown === id ? 'rotate-180' : ''}`} />
+      </button>
+      {activeDropdown === id && (
+        <div className="absolute top-full left-0 w-48 bg-white dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30 rounded-xl shadow-xl py-2 z-[1001] animate-in fade-in slide-in-from-top-2 duration-200">
+          {items.map((item) => (
+            item.isAction ? (
+              <button
+                key={item.label}
+                id={`nav-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                onClick={() => { window.dispatchEvent(new CustomEvent('open-ai-chat')); setActiveDropdown(null); }}
+                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 transition-colors"
+              >
+                <item.icon size={16} />
+                <span>{item.label}</span>
+              </button>
+            ) : (
+              <NavLink
+                key={item.to}
+                id={`nav-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                to={item.to}
+                onClick={() => setActiveDropdown(null)}
+                className={({ isActive }) => `
+                  flex items-center gap-3 px-4 py-2 text-sm transition-colors
+                  ${isActive ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 font-bold' : 'text-zinc-600 dark:text-zinc-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600'}
+                `}
+              >
+                <item.icon size={16} />
+                <span>{item.label}</span>
+              </NavLink>
+            )
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <nav className="hidden md:flex flex-col w-64 bg-white dark:bg-zinc-900 border-r border-emerald-100 dark:border-emerald-900/30 h-screen fixed left-0 top-0 p-6 z-50">
-        <div className="flex items-center justify-between mb-10 px-2">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200 dark:shadow-none">
+      {/* Desktop Top Navbar */}
+      <nav id="desktop-navbar" className="hidden md:flex fixed top-0 left-0 right-0 h-16 bg-white dark:bg-zinc-900 border-b border-emerald-100 dark:border-emerald-900/30 px-6 items-center justify-between z-[1000]">
+        <div className="flex items-center gap-6">
+          <div id="desktop-logo" className="flex items-center gap-3 cursor-pointer shrink-0" onClick={() => navigate('/')}>
+            <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg">
               <Star size={24} fill="currentColor" className="text-gold" />
             </div>
-            <span className="text-xl font-bold text-emerald-900 dark:text-emerald-100">Nurul Quran</span>
+            <span className="text-xl font-bold text-emerald-900 dark:text-emerald-100 hidden lg:block">Nurul Quran</span>
           </div>
-          <DarkModeToggle />
-        </div>
-        
-        <div className="space-y-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
-          <div className="space-y-1">
-            {mainNavItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) => `
-                  flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group
-                  ${isActive 
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
-                    : 'text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]'}
-                `}
-              >
-                <item.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
+
+          <div className="flex items-center gap-1">
+            {mainNavItems.slice(0, 4).map((item) => (
+              <NavLink key={item.to} id={`nav-main-${item.label.toLowerCase()}`} to={item.to} className={navLinkClass}>
+                <item.icon size={18} />
                 <span className="text-sm">{item.label}</span>
               </NavLink>
             ))}
+            <Dropdown label="Finance" items={financeNavItems} id="finance" />
+            <Dropdown label="Community" items={communityNavItems} id="community" />
+            <Dropdown label="More" items={[...mainNavItems.slice(4), ...otherNavItems]} id="more" />
           </div>
+        </div>
 
-          <div className="space-y-1">
-            <div className="px-4 mb-2 flex items-center gap-2">
-              <IndianRupee size={14} className="text-emerald-600" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Finance</span>
+        <div className="flex items-center gap-4">
+          <DarkModeToggle />
+
+          {user ? (
+            <div className="flex items-center gap-3 pl-2">
+              <NavLink id="nav-profile" to="/profile" className={navLinkClass}>
+                <User size={18} />
+                <span className="text-sm">Profile</span>
+              </NavLink>
+              <button id="nav-sign-out" onClick={handleSignOut} className="p-2 text-zinc-500 hover:text-red-500 transition-colors">
+                <LogOut size={18} />
+              </button>
             </div>
+          ) : (
+            <button
+              id="nav-sign-in"
+              onClick={() => setIsAuthModalOpen(true)}
+              className="px-4 py-2 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all text-sm"
+            >
+              Sign In
+            </button>
+          )}
+        </div>
+      </nav>
+
+      {/* Mobile Top Bar */}
+      <div id="mobile-top-bar" className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white dark:bg-zinc-900 border-b border-emerald-100 dark:border-emerald-900/30 px-4 flex items-center justify-between z-[1000]">
+        <div id="mobile-logo" className="flex items-center gap-2" onClick={() => navigate('/')}>
+          <Star size={20} className="text-gold" fill="currentColor" />
+          <span className="font-bold text-emerald-900 dark:text-emerald-100">Nurul Quran</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <DarkModeToggle />
+          <button 
+            id="mobile-menu-toggle"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 text-emerald-900 dark:text-emerald-100"
+          >
+            <span className="text-2xl">{isMenuOpen ? '✕' : '☰'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMenuOpen && (
+        <div id="mobile-menu-overlay" className="md:hidden fixed top-16 left-0 right-0 bottom-16 bg-white dark:bg-zinc-900 z-[999] overflow-y-auto animate-in slide-in-from-top duration-200">
+          <div className="flex flex-col p-4 gap-1 pb-20">
+            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-4 mb-2">Main Menu</p>
+            {mainNavItems.map((item) => (
+              <NavLink
+                key={item.to}
+                id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                to={item.to}
+                onClick={() => setIsMenuOpen(false)}
+                className={({ isActive }) => `
+                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                  ${isActive ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400' : 'text-zinc-600 dark:text-zinc-400'}
+                `}
+              >
+                <item.icon size={20} />
+                <span className="font-medium">{item.label}</span>
+              </NavLink>
+            ))}
+
+            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-4 mt-6 mb-2">Finance & Tools</p>
             {financeNavItems.map((item) => (
-              (item as any).isAction ? (
+              item.isAction ? (
                 <button
                   key={item.label}
-                  onClick={() => window.dispatchEvent(new CustomEvent('open-ai-chat'))}
-                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)] w-full text-left"
+                  id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                  onClick={() => { window.dispatchEvent(new CustomEvent('open-ai-chat')); setIsMenuOpen(false); }}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
                 >
-                  <item.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
-                  <span className="text-sm">{item.label}</span>
+                  <item.icon size={20} />
+                  <span className="font-medium">{item.label}</span>
                 </button>
               ) : (
                 <NavLink
                   key={item.to}
+                  id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                   to={item.to}
+                  onClick={() => setIsMenuOpen(false)}
                   className={({ isActive }) => `
-                    flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group
-                    ${isActive 
-                      ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
-                      : 'text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]'}
+                    flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                    ${isActive ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400' : 'text-zinc-600 dark:text-zinc-400'}
                   `}
                 >
-                  <item.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
-                  <span className="text-sm">{item.label}</span>
+                  <item.icon size={20} />
+                  <span className="font-medium">{item.label}</span>
                 </NavLink>
               )
             ))}
-          </div>
 
-          <div className="space-y-1">
-            <div className="px-4 mb-2 flex items-center gap-2">
-              <Users size={14} className="text-emerald-600" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Community</span>
-            </div>
+            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-4 mt-6 mb-2">Community</p>
             {communityNavItems.map((item) => (
               <NavLink
                 key={item.to}
+                id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                 to={item.to}
+                onClick={() => setIsMenuOpen(false)}
                 className={({ isActive }) => `
-                  flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group
-                  ${isActive 
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
-                    : 'text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]'}
+                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                  ${isActive ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400' : 'text-zinc-600 dark:text-zinc-400'}
                 `}
               >
-                <item.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
-                <span className="text-sm">{item.label}</span>
+                <item.icon size={20} />
+                <span className="font-medium">{item.label}</span>
               </NavLink>
             ))}
-          </div>
 
-          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest px-4 mt-6 mb-2">Other</p>
             {otherNavItems.map((item) => (
               item.to.endsWith('.html') ? (
                 <a
                   key={item.to}
+                  id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                   href={item.to}
-                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
                 >
-                  <item.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
-                  <span className="text-sm">{item.label}</span>
+                  <item.icon size={20} />
+                  <span className="font-medium">{item.label}</span>
                 </a>
               ) : (
                 <NavLink
                   key={item.to}
+                  id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                   to={item.to}
+                  onClick={() => setIsMenuOpen(false)}
                   className={({ isActive }) => `
-                    flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group
-                    ${isActive 
-                      ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
-                      : 'text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]'}
+                    flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                    ${isActive ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400' : 'text-zinc-600 dark:text-zinc-400'}
                   `}
                 >
-                  <item.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
-                  <span className="text-sm">{item.label}</span>
+                  <item.icon size={20} />
+                  <span className="font-medium">{item.label}</span>
                 </NavLink>
               )
             ))}
-          </div>
-        </div>
 
-        {!user && (
-          <button
-            onClick={() => setIsAuthModalOpen(true)}
-            className="mt-4 flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/20"
-          >
-            <LogIn size={20} />
-            <span>Sign In</span>
-          </button>
-        )}
-
-        {user && (
-          <div className="mt-4 p-4 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/20 group relative">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold">
-                {user.email?.[0].toUpperCase()}
-              </div>
-              <div className="overflow-hidden flex-1">
-                <p className="text-sm font-bold text-emerald-900 dark:text-emerald-100 truncate">
-                  {user.displayName || 'Seeker'}
-                </p>
-                <p className="text-[10px] text-emerald-600 dark:text-emerald-400 truncate">
-                  {user.email}
-                </p>
-              </div>
-              <button
-                onClick={handleSignOut}
-                className="p-2 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 rounded-lg transition-all"
-                title="Sign Out"
-              >
-                <LogOut size={16} />
-              </button>
+            <div className="mt-8 px-4">
+              {!user ? (
+                <button
+                  id="mobile-auth-sign-in"
+                  onClick={() => { setIsAuthModalOpen(true); setIsMenuOpen(false); }}
+                  className="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-900/20"
+                >
+                  <LogIn size={20} />
+                  <span>Sign In</span>
+                </button>
+              ) : (
+                <button
+                  id="mobile-auth-sign-out"
+                  onClick={() => { handleSignOut(); setIsMenuOpen(false); }}
+                  className="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl text-red-600 bg-red-50 dark:bg-red-900/10 font-bold"
+                >
+                  <LogOut size={20} />
+                  <span>Sign Out</span>
+                </button>
+              )}
             </div>
           </div>
-        )}
-      </nav>
+        </div>
+      )}
 
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
-      {/* Mobile Top Bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white dark:bg-zinc-900 border-b border-emerald-100 dark:border-emerald-900/30 px-4 flex items-center justify-between z-40">
-        <div className="flex items-center gap-2">
-          <Star size={20} className="text-gold" fill="currentColor" />
-          <span className="font-bold text-emerald-900 dark:text-emerald-100">Nurul Quran</span>
-        </div>
-        <DarkModeToggle />
-      </div>
-
       {/* Mobile Bottom Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-emerald-100 dark:border-emerald-900/30 px-2 py-3 z-40 flex justify-around items-center">
-        {[...mainNavItems.slice(0, 4), ...financeNavItems.slice(0, 2)].map((item) => (
-          (item as any).isAction ? (
+      <nav id="mobile-bottom-nav" className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-emerald-100 dark:border-emerald-900/30 px-2 py-2 z-[1000] flex justify-around items-center h-16">
+        {[
+          { to: '/', icon: Home, label: 'Home' },
+          { to: '/quran', icon: BookOpen, label: 'Quran' },
+          { to: '#ai-chat', icon: MessageSquare, label: 'AI Chat', isAction: true },
+          { to: '/profile', icon: User, label: 'Profile' },
+          { to: '/settings', icon: Settings, label: 'Settings' }
+        ].map((item) => (
+          item.isAction ? (
             <button
               key={item.label}
+              id={`bottom-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
               onClick={() => window.dispatchEvent(new CustomEvent('open-ai-chat'))}
-              className="flex flex-col items-center gap-1 transition-colors text-zinc-400 hover:text-emerald-600"
+              className="flex flex-col items-center justify-center gap-1 flex-1 text-zinc-400 hover:text-emerald-600 transition-colors"
             >
-              <item.icon size={20} />
-              <span className="text-[10px] font-medium">{item.label}</span>
+              <item.icon size={22} />
+              <span className="text-[10px] font-bold uppercase tracking-tighter">{item.label}</span>
             </button>
-          ) : item.to.endsWith('.html') ? (
-            <a
-              key={item.to}
-              href={item.to}
-              className="flex flex-col items-center gap-1 transition-colors text-zinc-400 hover:text-emerald-600"
-            >
-              <item.icon size={20} />
-              <span className="text-[10px] font-medium">{item.label}</span>
-            </a>
           ) : (
             <NavLink
               key={item.to}
+              id={`bottom-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
               to={item.to}
               className={({ isActive }) => `
-                flex flex-col items-center gap-1 transition-colors
+                flex flex-col items-center justify-center gap-1 flex-1 transition-colors
                 ${isActive ? 'text-emerald-600' : 'text-zinc-400'}
               `}
             >
-              <item.icon size={20} />
-              <span className="text-[10px] font-medium">{item.label}</span>
+              <item.icon size={22} />
+              <span className="text-[10px] font-bold uppercase tracking-tighter">{item.label}</span>
             </NavLink>
           )
         ))}

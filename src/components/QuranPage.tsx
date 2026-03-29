@@ -328,6 +328,7 @@ export const QuranPage = () => {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
               <input
+                id="quran-search-input"
                 type="text"
                 placeholder="Search Surah..."
                 value={search}
@@ -341,6 +342,7 @@ export const QuranPage = () => {
             {filteredSurahs.map((surah) => (
               <button
                 key={surah.number}
+                id={`quran-surah-card-${surah.number}`}
                 onClick={() => handleSurahClick(surah)}
                 className="flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30 rounded-2xl hover:border-emerald-400 transition-all text-left group"
               >
@@ -365,6 +367,7 @@ export const QuranPage = () => {
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
           <div className="flex items-center justify-between mb-6">
             <button 
+              id="quran-back-to-index"
               onClick={() => { navigate('/quran'); setAutoPlay(false); setPlayingAyah(null); audioRef.current?.pause(); }}
               className="text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-medium"
             >
@@ -372,14 +375,14 @@ export const QuranPage = () => {
               Back to Index
             </button>
             {autoPlay && (
-              <div className="flex items-center gap-2 text-emerald-600 animate-pulse">
+              <div id="quran-autoplay-indicator" className="flex items-center gap-2 text-emerald-600 animate-pulse">
                 <div className="w-2 h-2 bg-emerald-600 rounded-full" />
                 <span className="text-xs font-bold uppercase tracking-widest">Auto-playing</span>
               </div>
             )}
           </div>
 
-          <div className="bg-emerald-600 rounded-3xl p-8 text-white mb-8 relative overflow-hidden">
+          <div id="quran-surah-header" className="bg-emerald-600 rounded-3xl p-8 text-white mb-8 relative overflow-hidden">
             <div className="relative z-10">
               <h2 className="text-4xl font-bold mb-2">{selectedSurah.englishName}</h2>
               <p className="text-emerald-100 opacity-80">{selectedSurah.englishNameTranslation} • {selectedSurah.revelationType}</p>
@@ -409,6 +412,7 @@ export const QuranPage = () => {
                   <div className="flex items-center gap-2">
                     {user && (
                       <button 
+                        id={`quran-bookmark-ayah-${ayah.number}`}
                         onClick={() => toggleBookmark(ayah)}
                         disabled={bookmarkLoading === `quran-${ayah.number}`}
                         className={`p-2 rounded-full transition-all ${
@@ -427,6 +431,7 @@ export const QuranPage = () => {
                       </button>
                     )}
                     <button 
+                      id={`quran-play-ayah-${ayah.number}`}
                       onClick={() => playAyah(ayah.number)}
                       className={`p-2 rounded-full transition-all ${
                         playingAyah === ayah.number 
@@ -450,6 +455,7 @@ export const QuranPage = () => {
                 </p>
                 <div className="mt-6 pt-6 border-t border-emerald-50 dark:border-emerald-900/20 flex justify-end">
                   <button
+                    id={`quran-view-tafseer-${ayah.number}`}
                     onClick={() => navigate(`/tafseer/${selectedSurah.number}/${ayah.numberInSurah}`)}
                     className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-600 hover:text-emerald-700 transition-colors"
                   >
