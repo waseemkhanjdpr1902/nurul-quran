@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, Link } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { QuranPage } from './components/QuranPage';
 import { TafseerPage } from './components/TafseerPage';
@@ -30,6 +30,7 @@ import { HijriCalendar } from './components/HijriCalendar';
 import { SearchBar } from './components/SearchBar';
 import { TasbeehCounter } from './components/TasbeehCounter';
 import SplashPage from './components/SplashPage';
+import AppBackground from './components/AppBackground';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -264,14 +265,14 @@ const Footer = () => (
       <div id="footer-links-section">
         <h4 id="footer-links-title" className="font-bold text-zinc-900 dark:text-zinc-100 mb-6 uppercase tracking-widest text-xs">Quick Links</h4>
         <ul id="footer-links-list" className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
-          <li><a id="footer-link-quran" href="/quran" className="hover:text-emerald-600 transition-colors">Holy Quran</a></li>
-          <li><a id="footer-link-hadith" href="/hadith" className="hover:text-emerald-600 transition-colors">Hadith Library</a></li>
-          <li><a id="footer-link-halal-stocks" href="/finance/halal-stocks" className="hover:text-emerald-600 transition-colors">Halal Stocks</a></li>
-          <li><a id="footer-link-community" href="/community/qa" className="hover:text-emerald-600 transition-colors">Community Board</a></li>
-          <li><a id="footer-link-about" href="/about.html" className="hover:text-emerald-600 transition-colors">About Us</a></li>
-          <li><a id="footer-link-contact" href="/contact.html" className="hover:text-emerald-600 transition-colors">Contact</a></li>
-          <li><a id="footer-link-privacy" href="/privacy-policy.html" className="hover:text-emerald-600 transition-colors">Privacy Policy</a></li>
-          <li><a id="footer-link-donate" href="/donate" className="hover:text-emerald-600 transition-colors">Support Us</a></li>
+          <li><Link id="footer-link-quran" to="/quran" className="hover:text-emerald-600 transition-colors">Holy Quran</Link></li>
+          <li><Link id="footer-link-hadith" to="/hadith" className="hover:text-emerald-600 transition-colors">Hadith Library</Link></li>
+          <li><Link id="footer-link-halal-stocks" to="/finance/halal-stocks" className="hover:text-emerald-600 transition-colors">Halal Stocks</Link></li>
+          <li><Link id="footer-link-community" to="/community/qa" className="hover:text-emerald-600 transition-colors">Community Board</Link></li>
+          <li><Link id="footer-link-about" to="/mission" className="hover:text-emerald-600 transition-colors">About Us</Link></li>
+          <li><Link id="footer-link-contact" to="/mission" className="hover:text-emerald-600 transition-colors">Contact</Link></li>
+          <li><Link id="footer-link-privacy" to="/mission" className="hover:text-emerald-600 transition-colors">Privacy Policy</Link></li>
+          <li><Link id="footer-link-donate" to="/donate" className="hover:text-emerald-600 transition-colors">Support Us</Link></li>
         </ul>
       </div>
 
@@ -323,15 +324,23 @@ const AppContent = () => {
   const [showWelcome, setShowWelcome] = React.useState(false);
   const [showSplash, setShowSplash] = React.useState(true);
 
+  // Optimize: Only show splash once per session
   React.useEffect(() => {
-    const timer = setTimeout(() => {
+    const hasSeenSplash = sessionStorage.getItem('has_seen_splash');
+    if (hasSeenSplash) {
       setShowSplash(false);
-    }, 3000);
-    return () => clearTimeout(timer);
+    } else {
+      const timer = setTimeout(() => {
+        setShowSplash(false);
+        sessionStorage.setItem('has_seen_splash', 'true');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const handleEnter = () => {
     setShowSplash(false);
+    sessionStorage.setItem('has_seen_splash', 'true');
   };
 
   React.useEffect(() => {

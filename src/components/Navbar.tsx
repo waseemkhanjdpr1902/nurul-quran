@@ -40,9 +40,9 @@ export const Navbar = () => {
   ];
 
   const otherNavItems = [
-    { to: '/about.html', icon: Shield, label: 'About' },
-    { to: '/contact.html', icon: Mail, label: 'Contact' },
-    { to: '/privacy-policy.html', icon: Lock, label: 'Privacy' },
+    { to: '/mission', icon: Shield, label: 'About' },
+    { to: '/mission', icon: Mail, label: 'Contact' },
+    { to: '/mission', icon: Lock, label: 'Privacy' },
     { to: '/donate', icon: HeartHandshake, label: 'Donate' },
   ];
 

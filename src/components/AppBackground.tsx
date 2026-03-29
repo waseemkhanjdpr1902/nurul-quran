@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 
+const STARS_COUNT = 40;
+const STATIC_STARS = Array.from({ length: STARS_COUNT }).map((_, i) => ({
+  id: i,
+  top: `${(i * 137.5) % 100}%`,
+  left: `${(i * 151.1) % 100}%`,
+  delay: (i * 0.7) % 5,
+  size: (i % 3) + 1,
+}));
+
 const AppBackground: React.FC = () => {
-  const [stars, setStars] = useState<{ id: number; top: string; left: string; delay: number; size: number }[]>([]);
-
-  useEffect(() => {
-    // Generate 80 random stars
-    const newStars = Array.from({ length: 80 }).map((_, i) => ({
-      id: i,
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      delay: Math.random() * 5,
-      size: Math.random() * 2 + 1,
-    }));
-    setStars(newStars);
-  }, []);
-
   return (
     <div 
       id="app-background-root"
@@ -32,13 +27,13 @@ const AppBackground: React.FC = () => {
       />
 
       {/* Twinkling Stars */}
-      {stars.map((star) => (
+      {STATIC_STARS.map((star) => (
         <motion.div
           key={star.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: [0, 0.6, 0] }}
           transition={{
-            duration: 4 + Math.random() * 2,
+            duration: 4 + (star.id % 3),
             repeat: Infinity,
             delay: star.delay,
           }}
