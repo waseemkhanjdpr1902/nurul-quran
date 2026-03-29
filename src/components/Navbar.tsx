@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, BookOpen, Quote, Compass, Heart, HeartHandshake, User, LogIn, LogOut, Star, Shield, IndianRupee, Calculator, TrendingUp, Book, Users, MessageSquare, HelpCircle, Lock } from 'lucide-react';
+import { Home, BookOpen, Quote, Compass, Heart, HeartHandshake, User, LogIn, LogOut, Star, Shield, IndianRupee, Calculator, TrendingUp, Book, Users, MessageSquare, HelpCircle, Lock, Mail } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthModal } from './AuthModal';
 import { useNavigate } from 'react-router-dom';
@@ -39,7 +39,9 @@ export const Navbar = () => {
   ];
 
   const otherNavItems = [
-    { to: '/mission', icon: Shield, label: 'Mission' },
+    { to: '/about.html', icon: Shield, label: 'About' },
+    { to: '/contact.html', icon: Mail, label: 'Contact' },
+    { to: '/privacy-policy.html', icon: Lock, label: 'Privacy' },
     { to: '/donate', icon: HeartHandshake, label: 'Donate' },
     { to: '/profile', icon: User, label: 'Profile' },
   ];
@@ -134,19 +136,30 @@ export const Navbar = () => {
 
           <div className="space-y-1">
             {otherNavItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) => `
-                  flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group
-                  ${isActive 
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
-                    : 'text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]'}
-                `}
-              >
-                <item.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
-                <span className="text-sm">{item.label}</span>
-              </NavLink>
+              item.to.endsWith('.html') ? (
+                <a
+                  key={item.to}
+                  href={item.to}
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                >
+                  <item.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-sm">{item.label}</span>
+                </a>
+              ) : (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) => `
+                    flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group
+                    ${isActive 
+                      ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
+                      : 'text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]'}
+                  `}
+                >
+                  <item.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-sm">{item.label}</span>
+                </NavLink>
+              )
             ))}
           </div>
         </div>
@@ -210,6 +223,15 @@ export const Navbar = () => {
               <item.icon size={20} />
               <span className="text-[10px] font-medium">{item.label}</span>
             </button>
+          ) : item.to.endsWith('.html') ? (
+            <a
+              key={item.to}
+              href={item.to}
+              className="flex flex-col items-center gap-1 transition-colors text-zinc-400 hover:text-emerald-600"
+            >
+              <item.icon size={20} />
+              <span className="text-[10px] font-medium">{item.label}</span>
+            </a>
           ) : (
             <NavLink
               key={item.to}

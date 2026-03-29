@@ -263,8 +263,9 @@ const Footer = () => (
         <ul className="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
           <li><a href="/quran" className="hover:text-emerald-600 transition-colors">Holy Quran</a></li>
           <li><a href="/hadith" className="hover:text-emerald-600 transition-colors">Hadith Library</a></li>
-          <li><a href="/azkar" className="hover:text-emerald-600 transition-colors">Daily Azkar</a></li>
-          <li><a href="/mission" className="hover:text-emerald-600 transition-colors">Mission & Privacy</a></li>
+          <li><a href="/about.html" className="hover:text-emerald-600 transition-colors">About Us</a></li>
+          <li><a href="/contact.html" className="hover:text-emerald-600 transition-colors">Contact</a></li>
+          <li><a href="/privacy-policy.html" className="hover:text-emerald-600 transition-colors">Privacy Policy</a></li>
           <li><a href="/donate" className="hover:text-emerald-600 transition-colors">Support Us</a></li>
         </ul>
       </div>

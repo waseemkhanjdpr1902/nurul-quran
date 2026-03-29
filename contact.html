@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Nurul Quran</title>
+    <meta name="description" content="Get in touch with the Nurul Quran team for inquiries, bug reports, or feedback.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⭐</text></svg>">
+    <style>
+        body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #1a1a2e; color: #ffffff; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 4rem 2rem; }
+        .static-nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #1a1a2e; border-bottom: 1px solid #c9a84c; position: sticky; top: 0; z-index: 100; }
+        .static-nav a { color: #c9a84c; text-decoration: none; margin-left: 1.5rem; font-weight: bold; font-size: 0.9rem; }
+        .static-nav .logo { font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+        .static-footer { padding: 2rem; background: #1a1a2e; border-top: 1px solid #c9a84c; text-align: center; font-size: 0.8rem; color: #888; margin-top: 4rem; }
+        .static-footer a { color: #c9a84c; text-decoration: none; margin: 0 0.5rem; }
+        .static-footer .heart { color: #ff4d4d; }
+        h1 { color: #c9a84c; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #c9a84c; font-size: 0.9rem; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; background: #16213e; border: 1px solid #c9a84c44; border-radius: 8px; color: #fff; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #c9a84c; }
+        .btn { display: inline-block; padding: 0.8rem 1.5rem; background: #c9a84c; color: #1a1a2e; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 1rem; border: none; cursor: pointer; transition: opacity 0.2s; width: 100%; font-size: 1rem; }
+        .btn:hover { opacity: 0.9; }
+        .back-home { display: block; text-align: center; margin-top: 2rem; color: #c9a84c; text-decoration: none; font-size: 0.9rem; }
+        .contact-info { margin-top: 3rem; text-align: center; color: #aaa; font-size: 0.9rem; }
+        .contact-info a { color: #c9a84c; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header class="static-nav">
+        <div class="logo">⭐ Nurul Quran</div>
+        <nav>
+            <a href="/index.html">Home</a>
+            <a href="/about.html">About</a>
+            <a href="/contact.html">Contact</a>
+            <a href="/privacy-policy.html">Privacy</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Contact Us</h1>
+        <p>Have a question or feedback? We'd love to hear from you. Please fill out the form below and we'll get back to you as soon as possible.</p>
+        
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Your email address" required>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" name="subject" required>
+                    <option value="General Inquiry">General Inquiry</option>
+                    <option value="Bug Report">Bug Report</option>
+                    <option value="Feature Request">Feature Request</option>
+                    <option value="Dua/Feedback">Dua/Feedback</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" placeholder="How can we help you?" required></textarea>
+            </div>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+
+        <div class="contact-info">
+            <p>Or email us directly at: <a href="mailto:contact@nurulquran.com">contact@nurulquran.com</a></p>
+        </div>
+
+        <a href="/index.html" class="back-home">Back to Home</a>
+    </main>
+
+    <footer class="static-footer">
+        <p>&copy; 2026 Nurul Quran. All rights reserved.</p>
+        <p>
+            <a href="/about.html">About</a> | 
+            <a href="/contact.html">Contact</a> | 
+            <a href="/privacy-policy.html">Privacy Policy</a>
+        </p>
+        <p>Made with <span class="heart">❤️</span> for the Ummah</p>
+    </footer>
+</body>
+</html>
