@@ -136,7 +136,7 @@ export const TasawwufPage = () => {
                   className="group bg-white dark:bg-zinc-900 p-6 rounded-[32px] border border-emerald-50 dark:border-emerald-900/10 hover:border-emerald-200 dark:hover:border-emerald-900/30 transition-all flex flex-col md:flex-row gap-6"
                 >
                   <div className={`w-full md:w-48 h-48 rounded-2xl bg-${article.color}-50 dark:bg-${article.color}-900/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}>
-                    {React.cloneElement(article.icon as React.ReactElement, { size: 48 })}
+                    {React.cloneElement(article.icon as React.ReactElement<{ size?: number }>, { size: 48 })}
                   </div>
                   <div className="flex-grow flex flex-col justify-center">
                     <div className="flex items-center gap-3 mb-3">

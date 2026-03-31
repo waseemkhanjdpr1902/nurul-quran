@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, BookOpen, Quote, Compass, Heart, HeartHandshake, User, LogIn, LogOut, Star, Shield, IndianRupee, Calculator, TrendingUp, Book, Users, MessageSquare, HelpCircle, Lock, Mail, Bot, ChevronDown, LayoutDashboard, Menu, X, Settings, Clock, Calendar } from 'lucide-react';
+import { Home, BookOpen, Quote, Compass, Heart, HeartHandshake, User, LogIn, LogOut, Star, Shield, IndianRupee, Calculator, TrendingUp, Book, Users, MessageSquare, HelpCircle, Lock, Mail, Bot, ChevronDown, LayoutDashboard, Menu, X, Settings, Clock, Calendar, GraduationCap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthModal } from './AuthModal';
 import { DarkModeToggle } from './DarkModeToggle';
@@ -32,6 +32,7 @@ export const Navbar = () => {
     { to: '/quran', icon: BookOpen, label: 'Quran' },
     { to: '/tafseer', icon: Book, label: 'Tafseer' },
     { to: '/hadith', icon: Quote, label: 'Hadith' },
+    { to: '/courses', icon: GraduationCap, label: 'Courses' },
     { to: '/azkar', icon: Compass, label: 'Azkar' },
     { to: '/tasawwuf', icon: Heart, label: 'Tasawwuf' },
   ];
@@ -128,7 +129,7 @@ export const Navbar = () => {
           </Link>
 
           <div className="flex items-center gap-1">
-            {mainNavItems.slice(0, 4).map((item) => (
+            {mainNavItems.slice(0, 5).map((item) => (
               <Link key={item.to} href={item.to} className={navLinkClass(item.to)}>
                 <item.icon size={18} />
                 <span className="text-sm">{item.label}</span>
@@ -137,7 +138,7 @@ export const Navbar = () => {
             <Dropdown label="Finance" items={financeNavItems} id="finance" />
             <Dropdown label="Community" items={communityNavItems} id="community" />
             <Dropdown label="Tools" items={toolsNavItems} id="tools" />
-            <Dropdown label="More" items={[...mainNavItems.slice(4), ...otherNavItems]} id="more" />
+            <Dropdown label="More" items={[...mainNavItems.slice(5), ...otherNavItems]} id="more" />
           </div>
         </div>
 
