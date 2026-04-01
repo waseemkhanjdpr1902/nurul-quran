@@ -146,14 +146,51 @@ export const Navbar = () => {
           <DarkModeToggle />
 
           {user ? (
-            <div className="flex items-center gap-3 pl-2">
-              <Link href="/profile" className={navLinkClass('/profile')}>
-                <User size={18} />
-                <span className="text-sm">Profile</span>
-              </Link>
-              <button onClick={handleSignOut} className="p-2 text-zinc-500 hover:text-red-500 transition-colors">
-                <LogOut size={18} />
+            <div className="relative group">
+              <button className="flex items-center gap-3 pl-4 border-l border-zinc-100 dark:border-zinc-800">
+                <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 font-bold overflow-hidden">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt={user.displayName || ''} className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={16} />
+                  )}
+                </div>
+                <div className="text-left hidden lg:block">
+                  <p className="text-xs font-bold text-emerald-900 dark:text-emerald-100 truncate max-w-[100px]">{user.displayName}</p>
+                  <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Member</p>
+                </div>
+                <ChevronDown size={14} className="text-zinc-400 group-hover:rotate-180 transition-transform" />
               </button>
+
+              {/* User Dropdown */}
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl border border-emerald-100 dark:border-emerald-900/30 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                <div className="p-4 border-b border-zinc-100 dark:border-zinc-800 mb-2">
+                  <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Signed in as</p>
+                  <p className="text-sm font-bold text-emerald-900 dark:text-emerald-100 truncate">{user.email}</p>
+                </div>
+                <Link 
+                  href="/profile"
+                  className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 transition-all"
+                >
+                  <User size={18} />
+                  Profile
+                </Link>
+                <Link 
+                  href="/settings"
+                  className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 transition-all"
+                >
+                  <Settings size={18} />
+                  Settings
+                </Link>
+                <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-2 mx-2" />
+                <button 
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/10 transition-all"
+                >
+                  <LogOut size={18} />
+                  Sign Out
+                </button>
+              </div>
             </div>
           ) : (
             <button

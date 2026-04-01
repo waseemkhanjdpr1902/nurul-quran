@@ -130,6 +130,34 @@
         "timestamp": { "type": "string", "format": "date-time" }
       },
       "required": ["body", "author"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Educational course data",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "instructor": { "type": "string" },
+        "category": { "type": "string" },
+        "price": { "type": "number" },
+        "thumbnail": { "type": "string", "format": "uri" },
+        "enrolledCount": { "type": "integer" },
+        "rating": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "description", "instructor", "category"]
+    },
+    "Enrollment": {
+      "title": "Enrollment",
+      "description": "User course enrollment record",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "courseId": { "type": "string" },
+        "enrolledAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "courseId", "enrolledAt"]
     }
   },
   "firestore": {
@@ -168,6 +196,14 @@
     "/groups/{groupId}/posts/{postId}/replies/{replyId}": {
       "schema": "GroupReply",
       "description": "Replies to group posts"
+    },
+    "/courses/{courseId}": {
+      "schema": "Course",
+      "description": "Educational courses"
+    },
+    "/enrollments/{enrollmentId}": {
+      "schema": "Enrollment",
+      "description": "User course enrollments"
     }
   }
 }
