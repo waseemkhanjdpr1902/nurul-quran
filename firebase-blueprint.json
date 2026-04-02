@@ -12,7 +12,6 @@
         "stats": {
           "type": "object",
           "properties": {
-            "tasbeehCount": { "type": "integer" },
             "prayersCompleted": { "type": "integer" },
             "versesRead": { "type": "integer" }
           }
@@ -24,11 +23,11 @@
     },
     "UserProgress": {
       "title": "UserProgress",
-      "description": "Granular progress tracking for Quran and Azkar",
+      "description": "Granular progress tracking for Quran",
       "type": "object",
       "properties": {
         "user_id": { "type": "string" },
-        "type": { "type": "string", "enum": ["quran", "azkar"] },
+        "type": { "type": "string", "enum": ["quran"] },
         "content_id": { "type": "string" },
         "count": { "type": "integer" },
         "last_activity": { "type": "string", "format": "date-time" }
