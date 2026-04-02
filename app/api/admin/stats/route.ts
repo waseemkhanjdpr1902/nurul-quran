@@ -1,6 +1,13 @@
 import { getServerSession } from "next-auth/next";
+// @ts-ignore
 import { authOptions } from "../../../lib/auth";
+// @ts-ignore
 import { db, collection, getDocs, query, where } from "../../../lib/firebase";
+
+export async function GET() {
+  const session = await getServerSession(authOptions);
+  // ... rest of your code ...
+}";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
