@@ -1,7 +1,6 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
-import { db, collection, getDocs, query, where } from '../../../lib/firebase';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../../lib/auth";
+import { db, collection, getDocs, query, where } from "../../../lib/firebase";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
