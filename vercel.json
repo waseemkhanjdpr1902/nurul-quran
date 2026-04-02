@@ -1,8 +1,17 @@
 {
+  "framework": "nextjs",
   "rewrites": [
     {
+      "source": "/quran",
+      "destination": "/quran"
+    },
+    {
+      "source": "/tafseer",
+      "destination": "/tafseer"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/$1"
     }
   ]
 }
